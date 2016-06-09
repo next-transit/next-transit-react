@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var sass = require('node-sass');
+
+var inputPath = 'app/sass';
+var outputPath = 'public/css';
+var outputStyle = 'expanded';
+
+// outputStyle = 'compressed';
+
+function writeCssAndMap(fullPathAndName, result, callback) {
+  mkdirp(outputPath, function(err) {
+    if (err) return callback(err);
+
+    fs.writeFile(fullPathAndName, result.css, function(err) {
+      if (err) return callback(err);
+
+      fs.writeFile(fullPathAndName + '.map', result.map, callback);
+    });
+  });
+}
+
+function renderSassFile(filePath, callback) {
+  var outputFile = outputPath + '/' + filePath.replace('.scss', '.css');
+
+  sass.render({
+    file: inputPath + '/' + filePath,
+    outputStyle: outputStyle,
+    outFile: outputFile,
+    sourceMap: false
+  }, function(err, sassResult) {
+    if (err) {
+      console.error('[build-sass]', err.message, 'on', err.file + ', line', err.line + ':' + err.column);
+      return callback(err);
+    }
+
+    console.log('render', outputFile)
+    writeCssAndMap(outputFile, sassResult, callback);
+  });
+}
+
+renderSassFile('app.scss', function(err) {
+  if (err) return process.exit(1);
+
+  console.log('[build-sass] Finished');
+  process.exit(0);
+});

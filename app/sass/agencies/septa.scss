@@ -1,0 +1,18 @@
+$colors: (
+	buses: 			#41525c, 
+	subways: 		#477997,
+	trolleys:		#539442,
+	trains:			#477997,
+	bsl:			#f58220,
+	mfl:			#107dc1
+);
+
+@each $type, $color in $colors {
+	.home-route-type-#{$type} a:before {
+		background-color: $color;
+	}
+
+	.simple-nav strong.#{$type} {
+		background-color: transparentize($color, 0.5);
+	}
+}

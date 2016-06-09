@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var package = require('../package.json');
+var webpack = require('webpack');
+var resolve = require('path').resolve;
+var didFail = false;
+
+program
+  .version(package.version)
+  .option('-w, --watch', 'watches files and rebuilds on change');
+
+program.parse(process.argv);
+
+var plugins = [
+  new webpack.optimize.OccurenceOrderPlugin(true)
+];
+
+webpack({
+  entry: './app/javascript/index.js',
+  output: {
+    path: resolve('./public/js'),
+    filename: 'app.js'
+  },
+  devtool: 'source-map',
+  plugins: plugins,
+  bail: !program.watch,
+  watch: program.watch,
+  resolve: {
+    alias: {
+      components: resolve('./app/javascript/components'),
+      lib: resolve('./app/javascript/lib')
+    },
+    extensions: ['', '.js', '.jsx']
+  },
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader?stage=0&optional=runtime'
+    }]
+  }
+}, function(err, stats) {
+  if (err) {
+    console.error('[build-js] ', err.message);
+    process.exit(1);
+  } else {
+    if (program.watch) {
+      if (stats.compilation.errors[0]) {
+        didFail = true;
+        console.error('[build-js] ', stats.compilation.errors[0].message);
+      } else {
+        didFail = false;
+        console.log('[build-js] Build fixed');
+      }
+    }
+  }
+
+  console.log('[build-js] Built in', (stats.endTime - stats.startTime) + 'ms');
+});

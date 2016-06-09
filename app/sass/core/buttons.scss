@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+$btn_color: #f0f0f0;
+$btn_bg_color: rgba(255, 255, 255, 0.1);
+$btn_bg_color_hover: rgba(255, 255, 255, 0.15);
+$btn_bg_color_active: rgba(255, 255, 255, 0.05);
+
+$secondary_color: #aaa;
+$secondary_bg_color: rgba(255, 255, 255, 0.05);
+$secondary_bg_color_hover: rgba(255, 255, 255, 0.1);
+$secondary_bg_color_active: rgba(255, 255, 255, 0.025);
+
+.btn {
+  display: inline-block;
+  padding: 0.5em 1.2em;
+  vertical-align: middle;
+  line-height: normal;
+  border: 0;
+  background-color: $btn_bg_color;
+  background-repeat: no-repeat;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.3);
+  box-shadow:0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 3px;
+  color: $btn_color;
+  @inclide transition(background, .15s);
+}
+a.btn {
+  color: #f0f0f0;
+}
+input[type=button].btn {
+  -webkit-appearance: none;
+}
+.btn:hover {
+  background-color: $btn_bg_color_hover;
+}
+.btn:active {
+  background-color: $btn_bg_color_active;
+  box-shadow:0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
+}
+.btn.disabled, .btn[disabled] {
+  background-image: none;
+  outline: 0;
+  opacity: 0.7;
+  cursor: default;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+/* Sizes */
+.btn-huge {
+  /*padding: 12px 22px;*/
+  padding: 0.4em 1.4em;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.btn-large {
+  /*padding: 8px 16px;*/
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+.btn-small {
+  padding: 0.3em 0.8em;
+  font-size: 0.7rem;
+}
+.btn-mini {
+  padding: 0.3em 0.5em 0.25em;
+  font-size: 0.6rem;
+}
+.btn-full {
+  display: block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: $background_blue;
+}
+.btn-primary, a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
+  color: $color_blue;
+}
+.btn-primary:hover {
+  background-color: $background_blue_hover;
+}
+.btn-primary:active {
+  background-color: $background_blue_active;
+}
+
+.btn-secondary {
+  background-color: $secondary_bg_color;
+}
+.btn-secondary, a.btn-secondary, a.btn-secondary:hover, a.btn-secondary:active {
+  color: $secondary_color;
+}
+.btn-secondary:hover {
+  background-color: $secondary_bg_color_hover;
+}
+.btn-secondary:active {
+  background-color: $secondary_bg_color_active;
+}
+
+.btn-add {
+  background-color: $background_add;
+}
+.btn-add, a.btn-add, a.btn-add:hover, a.btn-add:active {
+  color: $color_add;
+}
+.btn-add:hover {
+  background-color: $background_add_hover;
+}
+.btn-add:active {
+  background-color: $background_add_active;
+}
+
+.btn-danger {
+  background-color: rgba($red, 0.4);
+}
+.btn-danger, a.btn-danger, a.btn-danger:hover, a.btn-danger:active {
+  color: lighten($red, 35%);
+}
+.btn-danger:hover {
+  background-color: rgba($red, 0.5);
+}
+.btn-danger:active {
+  background-color: rgba($red, 0.3);
+}
+
+/* Button Groups */
+.btn-group {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0; /* hack for after inline-block element spacing */
+}
+.btn-group > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.btn-group > .btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+.btn-group > .btn + .btn {
+  margin-left: -1px;
+}
+
+/* Right-aligned Button */
+.btn-right {
+  float: right;
+  margin-top: -0.5em;
+}
+
+/* Icons */
+.btn [class^="icon-"] {
+  padding-bottom: 1px;
+  vertical-align: middle;
+  font-size: 0.7em;
+}
+.btn-large [class^="icon-"]:first-child {
+  margin-right: 0.3em;
+}
+.btn-large [class*="icon-"]:last-child {
+  margin-left: 0.3em;
+}
+.btn-huge [class^="icon-"]:first-child {
+  margin-right: 0.5em;
+}
+.btn-huge [class*="icon-"]:last-child {
+  margin-left: 0.5em;
+}

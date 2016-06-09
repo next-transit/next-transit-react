@@ -1,0 +1,39 @@
+{
+  "name": "next-transit-web",
+  "version": "3.0.0",
+  "description": "NEXT-Transit Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/next-transit/next-transit-web.git"
+  },
+  "keywords": [
+    "transit",
+    "buses",
+    "trains",
+    "subways",
+    "stop",
+    "times"
+  ],
+  "author": "Reed Lauber",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/next-transit/next-transit-web/issues"
+  },
+  "homepage": "https://github.com/next-transit/next-transit-web#readme",
+  "devDependencies": {
+    "babel-core": "^5.8.34",
+    "babel-loader": "^5.4.0",
+    "commander": "^2.9.0",
+    "node-sass": "^3.7.0",
+    "webpack": "^1.12.9"
+  },
+  "dependencies": {
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-router": "^2.4.1"
+  }
+}
