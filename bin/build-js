@@ -49,7 +49,7 @@ webpack({
       if (stats.compilation.errors[0]) {
         didFail = true;
         console.error('[build-js] ', stats.compilation.errors[0].message);
-      } else {
+      } else if(didFail) {
         didFail = false;
         console.log('[build-js] Build fixed');
       }

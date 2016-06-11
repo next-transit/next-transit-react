@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+echo "[build-sass-start] Watching Sass..." 1>&2;
+
+if [ -f ./tmp/build-sass.pid ]; then
+  echo "[build-sass-start] Cannot watch Sass; it is already running." 1>&2;
+  exit 1
+fi
+
+./bin/build-sass-watch&
+
+printf '%s' "$!" > ./tmp/build-sass.pid
+
+sleep 0.25
+
+echo "[build-sass-start] Done." 1>&2;

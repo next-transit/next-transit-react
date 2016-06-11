@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo "[build-js-stop] Stopping the build-js process..." 1>&2;
+
+if [ -f ./tmp/build-js.pid ]; then
+  PID=`cat ./tmp/build-js.pid`
+  kill $PID
+  rm ./tmp/build-js.pid
+fi
+
+echo "[build-js-stop] Done." 1>&2;

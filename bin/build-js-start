@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+echo "[build-js-start] Watching JS..." 1>&2;
+
+if [ -f ./tmp/build-js.pid ]; then
+  echo "[build-js-start] Cannot watch JS; it is alraedy running." 1>&2;
+  exit 1
+fi
+
+bin/build-js --watch&
+
+printf '%s' "$!" > ./tmp/build-js.pid
+
+sleep 0.25
+
+echo "[build-js-start] Done." 1>&2;

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo "[build-sass-stop] Stopping the build-sass process..." 1>&2;
+
+if [ -f ./tmp/build-sass.pid ]; then
+  PID=`cat ./tmp/build-sass.pid`
+  kill $PID
+  rm ./tmp/build-sass.pid
+fi
+
+echo "[build-sass-stop] Done." 1>&2;

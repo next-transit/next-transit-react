@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var sys = require('sys');
+var exec = require('child_process').exec;
+var chokidar = require('chokidar');
+var matchGlob = 'app/sass/**/*.scss';
+
+chokidar.watch(matchGlob, {
+  ignored: /[\/\\]\./
+}).on('all', function(type, path, stats) {
+  console.log('[build-sass-watch] Watched Sass file changed:', path);
+  
+  exec('./bin/build-sass --silent', function(error, stdout, stderr) {
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+    if (error) {
+      console.error('[build-sass-watch] error:', error);
+      process.exit(1);
+    }
+  });
+});

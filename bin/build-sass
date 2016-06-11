@@ -2,13 +2,24 @@
 
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var program = require('commander');
 var sass = require('node-sass');
+var package = require('../package.json');
+
+program
+  .version(package.version)
+  .option('-s, --silent', 'watches files and rebuilds on change')
+  .option('-c, --compressed', 'minifies output');
+
+program.parse(process.argv);
 
 var inputPath = 'app/sass';
 var outputPath = 'public/css';
 var outputStyle = 'expanded';
 
-// outputStyle = 'compressed';
+if (program.compressed) {
+  outputStyle = 'compressed';
+}
 
 function writeCssAndMap(fullPathAndName, result, callback) {
   mkdirp(outputPath, function(err) {
@@ -36,7 +47,9 @@ function renderSassFile(filePath, callback) {
       return callback(err);
     }
 
-    console.log('render', outputFile)
+    if (!program.silent) {
+      console.log('render', outputFile)
+    }
     writeCssAndMap(outputFile, sassResult, callback);
   });
 }
@@ -44,6 +57,8 @@ function renderSassFile(filePath, callback) {
 renderSassFile('app.scss', function(err) {
   if (err) return process.exit(1);
 
-  console.log('[build-sass] Finished');
+  if (!program.silent) {
+    console.log('[build-sass] Finished'); 
+  }
   process.exit(0);
 });
