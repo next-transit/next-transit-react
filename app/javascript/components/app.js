@@ -6,9 +6,7 @@ import Footer from 'components/layout/footer';
 
 export default class Application extends Component {
   static propTypes = {
-    title: PropTypes.string,
-    route_type: PropTypes.string,
-    route: PropTypes.string
+    title: PropTypes.string
   };
 
   static defaultProps = {
