@@ -1,0 +1,14 @@
+echo "[proxy-start] Starting the proxy for port 5010..." 1>&2;
+
+if [ -f tmp/proxy.pid ]; then
+  echo "[proxy-start] Cannot start the proxy, it is already running." 1>&2;
+  exit 1
+fi
+
+haproxy -f haproxy.cfg&
+
+printf '%s' "$!" > tmp/proxy.pid
+
+sleep 0.25
+
+echo "[proxy-start] Done." 1>&2;

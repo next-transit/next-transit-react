@@ -1,0 +1,9 @@
+echo "[proxy-stop] Killing the proxy process..." 1>&2;
+
+if [ -f ./tmp/proxy.pid ]; then
+  PID=`cat ./tmp/proxy.pid`
+  kill $PID
+  rm ./tmp/proxy.pid
+fi
+
+echo "[proxy-stop] Done." 1>&2;

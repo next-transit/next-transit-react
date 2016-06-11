@@ -1,0 +1,14 @@
+echo "[server-start] Starting the static file server..." 1>&2;
+
+if [ -f tmp/static-server.pid ]; then
+  echo "[server-start] Cannot start the static file server; it is already running." 1>&2;
+  exit 1
+fi
+
+st --port 5010 --dir public --index index.html --dot false --no-cache&
+
+printf '%s' "$!" > tmp/static-server.pid
+
+sleep 0.25
+
+echo "[server-start] Done." 1>&2;

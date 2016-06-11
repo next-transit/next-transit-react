@@ -1,0 +1,9 @@
+echo "[server-stop] Killing the static file server process..." 1>&2;
+
+if [ -f ./tmp/static-server.pid ]; then
+  PID=`cat ./tmp/static-server.pid`
+  kill $PID
+  rm ./tmp/static-server.pid
+fi
+
+echo "[server-stop] Done." 1>&2;
