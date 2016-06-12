@@ -29,8 +29,6 @@ class HomeHandler extends Component {
 }
 
 export default connect((state) => {
-  console.log('agencies', state.agencies.agency)
-
   return {
     route_types: state.route_types.route_types
   };

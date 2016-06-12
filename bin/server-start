@@ -1,13 +1,14 @@
-echo "[server-start] Starting the static file server..." 1>&2;
+echo "[server-start] Starting node web server..." 1>&2;
 
-if [ -f tmp/static-server.pid ]; then
-  echo "[server-start] Cannot start the static file server; it is already running." 1>&2;
+if [ -f tmp/node-server.pid ]; then
+  echo "[server-start] Cannot start node web server; it is already running." 1>&2;
   exit 1
 fi
 
-st --port 5010 --dir public --index index.html --dot false --no-cache&
+# st --port 5010 --dir public --index index.html --dot false --no-cache&
+node ./server/index.js&
 
-printf '%s' "$!" > tmp/static-server.pid
+printf '%s' "$!" > tmp/node-server.pid
 
 sleep 0.25
 

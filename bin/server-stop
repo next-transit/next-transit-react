@@ -1,9 +1,9 @@
-echo "[server-stop] Killing the static file server process..." 1>&2;
+echo "[server-stop] Killing node web file server process..." 1>&2;
 
-if [ -f ./tmp/static-server.pid ]; then
-  PID=`cat ./tmp/static-server.pid`
+if [ -f ./tmp/node-server.pid ]; then
+  PID=`cat ./tmp/node-server.pid`
   kill $PID
-  rm ./tmp/static-server.pid
+  rm ./tmp/node-server.pid
 fi
 
 echo "[server-stop] Done." 1>&2;

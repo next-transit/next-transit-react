@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "start": "bin/build-sass-start & bin/build-js-start & bin/proxy-start & bin/server-start",
-    "stop": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop & bin/proxy-stop"
+    "start": "bin/build-sass-start & bin/build-js-start & bin/server-start",
+    "stop": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,11 @@
   },
   "homepage": "https://github.com/next-transit/next-transit-web#readme",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "classnames": "^2.2.5",
+    "compression": "^1.6.2",
+    "express": "^4.13.4",
+    "hbs": "^4.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
@@ -42,7 +46,6 @@
     "chokidar": "^1.5.2",
     "commander": "^2.9.0",
     "node-sass": "^3.7.0",
-    "st": "^1.1.0",
     "webpack": "^1.12.9"
   }
 }
