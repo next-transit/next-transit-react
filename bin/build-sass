@@ -8,6 +8,7 @@ var package = require('../package.json');
 
 program
   .version(package.version)
+  .option('-f, --file [name]', 'file to compile')
   .option('-s, --silent', 'watches files and rebuilds on change')
   .option('-c, --compressed', 'minifies output');
 
@@ -16,6 +17,7 @@ program.parse(process.argv);
 var inputPath = 'app/sass';
 var outputPath = 'public/css';
 var outputStyle = 'expanded';
+var file = program.file || 'app.scss';
 
 if (program.compressed) {
   outputStyle = 'compressed';
@@ -54,7 +56,7 @@ function renderSassFile(filePath, callback) {
   });
 }
 
-renderSassFile('app.scss', function(err) {
+renderSassFile(file, function(err) {
   if (err) return process.exit(1);
 
   if (!program.silent) {

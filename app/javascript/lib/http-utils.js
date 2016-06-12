@@ -20,3 +20,10 @@ export function request(options, callback) {
     }
   });
 }
+
+export function requestGet(path, callback) {
+  request({
+    method: 'GET',
+    url: path
+  }, callback);
+}

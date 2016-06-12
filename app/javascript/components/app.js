@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { agencyRequested } from 'lib/actions/agencies';
 
 import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
@@ -16,6 +18,10 @@ export default class Application extends Component {
   state = {
     show_map: null
   };
+
+  componentDidMount() {
+    this.props.dispatch(agencyRequested('trimet'));
+  }
 
   render() {
     let content_classes = classnames('content', {
@@ -38,3 +44,9 @@ export default class Application extends Component {
     );
   }
 }
+
+export default connect((state) => {
+  return {
+    agency: state.agencies.agency
+  };
+})(Application);
