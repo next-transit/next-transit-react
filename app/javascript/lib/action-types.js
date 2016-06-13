@@ -24,5 +24,10 @@ export default {
     'ROUTE_TYPES_REQUESTED',
     'ROUTE_TYPES_RECEIVED',
     'ROUTE_TYPES_FAILED'
+  ]),
+
+  settings: actionsObject([
+    'SETTINGS_REQUESTED',
+    'SETTINGS_RECEIVED'
   ])
 };

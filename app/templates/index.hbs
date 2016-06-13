@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>NEXT-Transit</title>
+  <title>{{agency_settings.app_title}}</title>
   <meta name="description" content="SEPTA next stop times and maps.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -13,6 +13,14 @@
   <link type="text/css" rel="stylesheet" href="/css/agencies/trimet.css" />
 </head>
 <body>
+  <div 
+    id="next-transit-env" 
+    data-data-url={{data_url}}
+    data-api-key={{agency_settings.data_api_key}}
+    data-agency="{{agency}}"
+    data-app-title="{{agency_settings.app_title}}"
+    data-search-text="{{agency_settings.search_text}}"
+  ></div>
   <div id="next-transit-app"></div>
   <script src="/js/app.js"></script>
 </body>

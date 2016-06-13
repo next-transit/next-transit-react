@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import { settingsRequested } from 'lib/actions/settings';
 import { agencyRequested } from 'lib/actions/agencies';
 
 import Header from 'components/layout/header';
@@ -8,7 +9,6 @@ import Footer from 'components/layout/footer';
 
 export default class Application extends Component {
   static propTypes = {
-    title: PropTypes.string
   };
 
   static defaultProps = {
@@ -19,8 +19,14 @@ export default class Application extends Component {
     show_map: null
   };
 
-  componentDidMount() {
-    this.props.dispatch(agencyRequested('trimet'));
+  componentWillMount() {
+    this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.settings && !nextProps.agency && !nextProps.isAgencyLoading) {
+      this.props.dispatch(agencyRequested(nextProps.settings.agency));
+    }
   }
 
   render() {
@@ -30,7 +36,9 @@ export default class Application extends Component {
 
     return(
       <div className="container">
-        <Header />
+        {this.props.settings &&
+          <Header title={this.props.settings.app_title} />
+        }
         <div className={content_classes}>
           <div className="content-panel">
             {this.props.children}
@@ -47,6 +55,9 @@ export default class Application extends Component {
 
 export default connect((state) => {
   return {
-    agency: state.agencies.agency
+    agency: state.agencies.agency,
+    isAgencyLoading: state.agencies.isAgencyLoading,
+
+    settings: state.settings.settings
   };
 })(Application);
