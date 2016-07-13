@@ -13,6 +13,14 @@ export function setSettings(settings) {
 export function request(options, callback) {
   if (!API_URL || !API_KEY) return console.error('API settings aren\'t available');
 
+  if (typeof options === 'string') {
+    options = {
+      url: options
+    };
+  }
+
+  options.method = options.method || 'GET';
+
   options.url = `${API_URL}/${options.url}?api_key=${API_KEY}`;
 
   xhr(options, (error, response, body) => {

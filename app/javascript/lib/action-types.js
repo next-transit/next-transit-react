@@ -30,10 +30,20 @@ export default {
     'SAVED_TRIP_DELETE_REQUESTED'
   ]),
 
+  route_directions: actionsObject([
+    'ROUTE_DIRECTIONS_REQUESTED',
+    'ROUTE_DIRECTIONS_RECEIVED',
+    'ROUTE_DIRECTIONS_FAILED'
+  ]),
+
   route_types: actionsObject([
     'ROUTE_TYPES_REQUESTED',
     'ROUTE_TYPES_RECEIVED',
-    'ROUTE_TYPES_FAILED'
+    'ROUTE_TYPES_FAILED',
+
+    'ROUTES_REQUESTED',
+    'ROUTES_RECEIVED',
+    'ROUTES_FAILED'
   ]),
 
   settings: actionsObject([
