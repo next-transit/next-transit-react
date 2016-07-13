@@ -20,6 +20,10 @@ export default {
     'AGENCY_FAILED'
   ]),
 
+  page: actionsObject([
+    'PAGE_STATE_RECEIVED'
+  ]),
+
   recent_trips: actionsObject([
     'RECENT_TRIPS_REQUESTED',
     'RECENT_TRIPS_RECEIVED',

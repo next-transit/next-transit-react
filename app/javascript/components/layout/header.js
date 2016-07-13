@@ -4,34 +4,32 @@ import { Link } from 'react-router';
 
 export default class LayoutHeader extends Component {
   static propTypes = {
-    title: PropTypes.string
+    title: PropTypes.string,
+    back_path: PropTypes.string
   };
 
   static defaultProps = {
-    title: 'NEXT-Transit'
-  };
-
-  state = {
+    title: 'NEXT-Transit',
     back_path: null
   };
 
   render() {
     let back_classes = classnames('app-header-btn app-header-back-btn', {
-      'active': !!this.state.back_path
+      'active': !!this.props.back_path
     });
     let content_classes = classnames('content', {
-      'hidden': !!this.state.show_map
+      'hidden': !!this.props.show_map
     });
 
     return(
       <header className="app-header">
-        <a 
-          href="{this.state.back_path}" 
+        <Link 
+          to={this.props.back_path}
           className={back_classes} 
           title="Go back"
         >
           <i className="icon-chevron-sign-left"></i>
-        </a>
+        </Link>
         <span className="app-title">{this.props.title}</span>
         <Link to="/options" className="app-header-btn">
           <i className="icon-reorder"></i>

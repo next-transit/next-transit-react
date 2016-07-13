@@ -30,7 +30,7 @@ export default class Application extends Component {
     return(
       <div className="container">
         {this.props.settings &&
-          <Header title={this.props.settings.app_title} />
+          <Header title={this.props.page.title} back_path={this.props.page.back} />
         }
         <div className={content_classes}>
           <div className="content-panel">
@@ -53,6 +53,7 @@ export default connect((state) => {
     agency: state.agencies.agency,
     isAgencyLoading: state.agencies.isAgencyLoading,
 
+    page: state.page,
     settings: state.settings.settings
   };
 })(Application);

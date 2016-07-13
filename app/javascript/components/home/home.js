@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 
 export default class Home extends Component {
   static propTypes = {
@@ -23,7 +24,7 @@ export default class Home extends Component {
       }
       return (
         <li key={`route-type-${route_type.id}`} className={`home-route-type home-route-type-${route_type.slug}`}>
-          <a href={path}>{route_type.label}</a>
+          <Link to={path}>{route_type.label}</Link>
         </li>
       );
     });
@@ -58,9 +59,9 @@ export default class Home extends Component {
 
         <div className="content-inner content-section">
           <nav className="simple-nav small">
-            <a href="/locate">
+            <Link to="/locate">
               <i className="icon-compass"></i> Find nearby routes
-            </a>
+            </Link>
           </nav>
         </div>
 
