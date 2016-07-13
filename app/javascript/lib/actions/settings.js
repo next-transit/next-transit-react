@@ -4,7 +4,7 @@ import { setSettings } from 'lib/http-utils';
 const SETTING_NAMES = [
   'agency',
   'api_key',
-  'data_url',
+  'api_url',
   'search_text',
   'app_title'
 ];

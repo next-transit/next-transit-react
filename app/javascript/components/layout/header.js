@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
+import { Link } from 'react-router';
 
 export default class LayoutHeader extends Component {
   static propTypes = {
@@ -32,9 +33,9 @@ export default class LayoutHeader extends Component {
           <i className="icon-chevron-sign-left"></i>
         </a>
         <span className="app-title">{this.props.title}</span>
-        <a href="/options" className="app-header-btn">
+        <Link to="/options" className="app-header-btn">
           <i className="icon-reorder"></i>
-        </a>
+        </Link>
       </header>
     );
   }

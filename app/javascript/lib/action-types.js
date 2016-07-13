@@ -20,6 +20,16 @@ export default {
     'AGENCY_FAILED'
   ]),
 
+  recent_trips: actionsObject([
+    'RECENT_TRIPS_REQUESTED',
+    'RECENT_TRIPS_RECEIVED',
+    'RECENT_TRIP_SAVE_REQUESTED',
+    'SAVED_TRIPS_REQUESTED',
+    'SAVED_TRIPS_RECEIVED',
+    'SAVED_TRIP_RECEIVED',
+    'SAVED_TRIP_DELETE_REQUESTED'
+  ]),
+
   route_types: actionsObject([
     'ROUTE_TYPES_REQUESTED',
     'ROUTE_TYPES_RECEIVED',

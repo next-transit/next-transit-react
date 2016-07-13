@@ -9,15 +9,17 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   
+  <link rel="shortcut icon" href="/images/{{agency.slug}}-favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/images/{{agency.slug}}-favicon.ico" type="image/x-icon">
   <link type="text/css" rel="stylesheet" href="/css/app.css" />
   <link type="text/css" rel="stylesheet" href="/css/agencies/trimet.css" />
 </head>
 <body>
   <div 
     id="next-transit-env" 
-    data-data-url={{data_url}}
-    data-api-key={{agency_settings.data_api_key}}
     data-agency="{{agency}}"
+    data-api-key={{agency_settings.data_api_key}}
+    data-api-url={{data_url}}
     data-app-title="{{agency_settings.app_title}}"
     data-search-text="{{agency_settings.search_text}}"
   ></div>

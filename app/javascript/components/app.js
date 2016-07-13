@@ -8,13 +8,6 @@ import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
 
 export default class Application extends Component {
-  static propTypes = {
-  };
-
-  static defaultProps = {
-    title: 'NEXT-Transit'
-  };
-
   state = {
     show_map: null
   };
@@ -45,9 +38,11 @@ export default class Application extends Component {
           </div>
         </div>
         <Footer />
-        {/*<div className="map js-map{{#if show_map}} active{{/if}}" ctrl="map">
-          <div id="map-inner" className="dark map-inner js-map-inner"></div>
-        </div>*/}
+        {this.state.show_map &&
+          <div className="map active">
+            <div id="map-inner" className="dark map-inner"></div>
+          </div>
+        }
       </div>
     );
   }
