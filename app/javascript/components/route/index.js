@@ -10,13 +10,13 @@ class RouteHandler extends Component {
 
     if (this.props.route) {
       this.props.dispatch(pageStateUpdated({ title:this.props.route.route_name }));
+    }
 
-      if (!this.props.directions
-        && !this.props.directions_loading
-        && !this.props.directions_error) 
-      {
-        this.props.dispatch(routeDirectionsRequested(this.props.routeParams.routeId));
-      }
+    if (!this.props.directions
+      && !this.props.directions_loading
+      && !this.props.directions_error) 
+    {
+      this.props.dispatch(routeDirectionsRequested(this.props.routeParams.routeId));
     }
   }
 
@@ -39,8 +39,6 @@ class RouteHandler extends Component {
 
 export default connect((state, params) => {
   let { routeId } = params.routeParams;
-
-  console.log('list', routeId, state.route_directions.directions)
 
   return {
     route: state.routes.routes[routeId],
