@@ -1,29 +1,34 @@
 import { getRouteDirections } from 'lib/apis/route-directions';
 import { route_directions as types } from 'lib/action-types';
 
-export function routeDirectionsFailed(error) {
+export function routeDirectionsFailed(route_id, error) {
   return {
-    error,
-    type: types.ROUTE_DIRECTIONS_FAILED
+    type: types.ROUTE_DIRECTIONS_FAILED,
+    route_id,
+    error
   };
 }
 
-export function routeDirectionsReceived(route_directions) {
+export function routeDirectionsReceived(route_id, directions) {
   return {
-    route_directions,
-    type: types.ROUTE_DIRECTIONS_RECEIVED
+    type: types.ROUTE_DIRECTIONS_RECEIVED,
+    route_id, 
+    directions
   };
 }
 
-export function routeDirectionsRequested(route_type) {
+export function routeDirectionsRequested(route_id) {
   return (dispatch, getState) => {
-    dispatch({ type:types.ROUTE_DIRECTIONS_REQUESTED });
+    dispatch({ 
+      type:types.ROUTE_DIRECTIONS_REQUESTED,
+      route_id
+    });
 
-    getRouteDirections(route_type, (error, response, body) => {
+    getRouteDirections(route_id, (error, response, body) => {
       if (error) {
-        dispatch(routeDirectionsFailed(error));
+        dispatch(routeDirectionsFailed(route_id, error));
       } else {
-        dispatch(routeDirectionsReceived(body.data));
+        dispatch(routeDirectionsReceived(route_id, body.data));
       }
     });
   };
