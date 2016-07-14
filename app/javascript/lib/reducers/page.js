@@ -16,6 +16,9 @@ function pageStateReceived(state, action) {
     action.changes.title = `${title} - ${action.settings.app_title}`;
   }
 
+  // Default to a "true" footer unless it's explicitly set to "false"
+  action.changes.footer = action.changes.footer !== false;
+
   return {
     ...state,
     ...action.changes
@@ -24,7 +27,8 @@ function pageStateReceived(state, action) {
 
 export default createReducer({
   title: '',
-  back: null
+  back: null,
+  footer: true
 }, {
   [types.settings.SETTINGS_RECEIVED]: settingsReceived,
   [types.page.PAGE_STATE_RECEIVED]: pageStateReceived

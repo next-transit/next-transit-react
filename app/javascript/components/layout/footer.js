@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import classnames from 'classnames';
 
 export default class LayoutFooter extends Component {
@@ -35,7 +36,9 @@ export default class LayoutFooter extends Component {
       <footer className={classes}>
         <ul>
           <li className="">
-            <a href="/" className="app-footer-btn"><i className="icon-home"></i></a>
+            <Link to="/" className="app-footer-btn">
+              <i className="icon-home"></i>
+            </Link>
           </li>
           {this.getMenuItems()}
         </ul>

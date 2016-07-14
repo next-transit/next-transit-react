@@ -79,7 +79,7 @@ export default class Application extends Component {
             {this.props.children}
           </div>
         </div>
-        <Footer />
+        <Footer active={this.props.page.footer} />
         {this.state.show_map &&
           <div className="map active">
             <div id="map-inner" className="dark map-inner"></div>
