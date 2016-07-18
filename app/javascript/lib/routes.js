@@ -3,6 +3,7 @@ import { IndexRoute, Route } from 'react-router';
 
 import App from 'components/app.js';
 
+import Direction from 'components/direction';
 import Home from 'components/home';
 import NotFound from 'components/not-found';
 import Options from 'components/options';
@@ -15,6 +16,7 @@ export default (
     <IndexRoute component={Home} />
     <Route path="/options" component={Options} />
     <Route path="/patterns" component={Patterns} />
+    <Route path="/:routeType/:routeId/:directionId" component={Direction} />
     <Route path="/:routeType/:routeId" component={RouteHandler} />
     <Route path="/:routeType" component={RouteType} />
     <Route path="*" component={NotFound} />

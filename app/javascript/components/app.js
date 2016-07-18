@@ -6,6 +6,7 @@ import { agencyRequested } from 'lib/actions/agencies';
 import { routeTypesRequested } from 'lib/actions/route-types';
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
+import { routeDirectionStopsRequested } from 'lib/actions/stops';
 
 import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
@@ -18,7 +19,7 @@ export default class Application extends Component {
   componentWillMount() {
     this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
 
-    let { routeType, routeId } = this.props.params;
+    let { routeType, routeId, directionId } = this.props.params;
 
     if (routeType && !this.props.route_type) {
       this.props.dispatch(routeTypesRequested());
@@ -29,6 +30,10 @@ export default class Application extends Component {
       this.props.dispatch(routeRequested(routeId));
       this.props.dispatch(routeDirectionsRequested(routeId));
     }
+
+    if (routeId && directionId && !this.props.stops) {
+      this.props.dispatch(routeDirectionStopsRequested(routeId, directionId));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,9 +41,10 @@ export default class Application extends Component {
       this.props.dispatch(agencyRequested(nextProps.settings.agency));
     }
 
-    let { routeType, routeId } = this.props.params;
+    let { routeType, routeId, directionId } = this.props.params;
     let nextRouteType = nextProps.params.routeType;
     let nextRouteId = nextProps.params.routeId;
+    let nextDirectionId = nextProps.params.directionId;
 
     if (nextRouteType
       && nextRouteType !== routeType
@@ -61,6 +67,15 @@ export default class Application extends Component {
     {
       this.props.dispatch(routeRequested(nextRouteId));
       this.props.dispatch(routeDirectionsRequested(nextRouteId));
+    }
+
+    if (nextDirectionId
+      && nextDirectionId !== directionId
+      && !nextProps.stops
+      && !nextProps.stops_loading
+      && !nextProps.stops_error)
+    {
+      this.props.dispatch(routeDirectionStopsRequested(nextRouteId, nextDirectionId));
     }
   }
 
@@ -91,7 +106,8 @@ export default class Application extends Component {
 }
 
 export default connect((state, params) => {
-  let { routeType, routeId } = params.params;
+  let { routeType, routeId, directionId } = params.params;
+  let stops_key = `${routeId}-${directionId}`;
 
   return {
     agency: state.agencies.agency,
@@ -106,6 +122,10 @@ export default connect((state, params) => {
 
     route: state.routes.routes[routeId],
     route_error: state.routes.route_errors[routeId],
-    route_loading: state.routes.route_loading[routeId]
+    route_loading: state.routes.route_loading[routeId],
+
+    stops: state.stops.stops[stops_key],
+    stops_loading: state.stops.stops_loading[stops_key],
+    stops_error: state.stops.stops_errors[stops_key]
   };
 })(Application);

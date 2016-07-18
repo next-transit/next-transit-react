@@ -59,5 +59,11 @@ export default {
   settings: actionsObject([
     'SETTINGS_REQUESTED',
     'SETTINGS_RECEIVED'
+  ]),
+
+  stops: actionsObject([
+    'ROUTE_DIRECTION_STOPS_REQUESTED',
+    'ROUTE_DIRECTION_STOPS_RECEIVED',
+    'ROUTE_DIRECTION_STOPS_FAILED'
   ])
 };
