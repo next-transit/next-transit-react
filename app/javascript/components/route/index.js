@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { pageStateUpdated } from 'lib/actions/page';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
-import Route from './route';
+import View from 'components/shared/view';
 
 class RouteHandler extends Component {
   componentDidMount() {
     this.props.dispatch(pageStateUpdated({ back:`/${this.props.routeParams.routeType}` }));
 
     if (this.props.route) {
-      this.props.dispatch(pageStateUpdated({ title:this.props.route.route_name }));
+      this.props.dispatch(pageStateUpdated({ title:this.props.route.route_short_name }));
     }
 
     if (!this.props.directions
@@ -22,17 +23,26 @@ class RouteHandler extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.route !== nextProps.route) {
-      this.props.dispatch(pageStateUpdated({ title:nextProps.route.route_name }));
+      this.props.dispatch(pageStateUpdated({ title:nextProps.route.route_short_name }));
     }
+  }
+
+  getDirectionItems() {
+    return this.props.directions && this.props.directions.map((direction, i) => {
+      return (
+        <li key={`direction-${i}`}>
+          <Link to={`/${this.props.route_type}/${this.props.route_id}/${direction.direction_id}`}>
+            <strong>{direction.direction_name}</strong>
+            <span>to {direction.direction_long_name}</span>
+          </Link>
+        </li>
+      );
+    });
   }
 
   render() {
     return (
-      <Route 
-        route_type={this.props.routeParams.routeType} 
-        route_id={this.props.routeParams.routeId} 
-        directions={this.props.directions} 
-      />
+      <View name="directions" nav_items={this.getDirectionItems()} />
     );
   }
 }

@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { pageStateUpdated } from 'lib/actions/page';
-import RoutesList from './routes-list';
+import View from 'components/shared/view';
 
 class RouteTypeHandler extends Component {
   componentDidMount() {
@@ -18,9 +19,24 @@ class RouteTypeHandler extends Component {
     }
   }
 
+  getRouteItems() {
+    return this.props.routes && this.props.routes.map((route) => {
+      return (
+        <li key={`route-${route.route_id}`}>
+          <Link to={`/${route.route_type_slug}/${route.slug}`}>
+            <strong className={`${route.route_type_slug} ${route.slug}`}>
+              {route.route_short_name}
+            </strong>
+            <span>{route.route_long_name}</span>
+          </Link>
+        </li>
+      );
+    });
+  }
+
   render() {
     return (
-      <RoutesList routes={this.props.routes} />
+      <View name="routes" nav_items={this.getRouteItems()} />
     );
   }
 }
