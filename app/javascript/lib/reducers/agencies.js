@@ -11,7 +11,7 @@ function agenciesReceived(state, action) {
 function agencyReceived(state, action) {
   return {
     ...state,
-    isAgencyLoading: false,
+    is_agency_loading: false,
     agency: action.agency
   };
 }
@@ -19,14 +19,14 @@ function agencyReceived(state, action) {
 function agencyRequested(state, action) {
   return {
     ...state,
-    isAgencyLoading: true
+    is_agency_loading: true
   }
 }
 
 export default createReducer({
   agencies: [],
   agency: null,
-  isAgencyLoading: false
+  is_agency_loading: false
 }, {
   [types.AGENCIES_RECEIVED]: agenciesReceived,
   [types.AGENCY_REQUESTED]: agencyRequested,

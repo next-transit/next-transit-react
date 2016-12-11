@@ -12,16 +12,23 @@ function stopsRequested(state, action) {
 }
 
 function stopsReceived(state, action) {
-  let stops_loading = state.stops_loading;
+  let {
+    stops_by_id,
+    stops_loading,
+    stops_errors,
+    stops
+  } = state;
+
   stops_loading[action.key] = false;
-
-  let stops_errors = state.stops_errors;
   stops_errors[action.key] = undefined;
-
-  let stops = state.stops;
   stops[action.key] = action.stops;
 
+  action.stops.forEach((stop) => {
+    stops_by_id[stop.stop_id] = stop;
+  });
+
   return {
+    stops_by_id,
     stops,
     stops_loading,
     stops_errors
@@ -43,6 +50,7 @@ function stopsFailed(state, action) {
 }
 
 export default createReducer({
+  stops_by_id: {},
   stops: {},
   stops_loading: {},
   stops_errors: {}

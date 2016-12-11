@@ -28,10 +28,12 @@ class RouteHandler extends Component {
   }
 
   getDirectionItems() {
+    const { routeType, routeId } = this.props.routeParams;
+
     return this.props.directions && this.props.directions.map((direction, i) => {
       return (
         <li key={`direction-${i}`}>
-          <Link to={`/${this.props.route_type}/${this.props.route_id}/${direction.direction_id}`}>
+          <Link to={`/${routeType}/${routeId}/${direction.direction_id}`}>
             <strong>{direction.direction_name}</strong>
             <span>to {direction.direction_long_name}</span>
           </Link>

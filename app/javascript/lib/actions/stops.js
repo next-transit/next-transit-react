@@ -1,10 +1,10 @@
 import { stops as types } from 'lib/action-types';
-import { getRouteDirectionStops } from 'lib/apis/simplified-stops';
+import { getRouteDirectionStops } from 'lib/apis/stops';
 
 /*
- * STOPS
+ * ROUTE DIRECTION STOPS LIST
  */
-export function routeDirectionStopsFailed(route_id, direction_id, error) {
+function routeDirectionStopsFailed(route_id, direction_id, error) {
   return {
     type: types.ROUTE_DIRECTION_STOPS_FAILED,
     key: `${route_id}-${direction_id}`,
@@ -12,7 +12,7 @@ export function routeDirectionStopsFailed(route_id, direction_id, error) {
   };
 }
 
-export function routeDirectionStopsReceived(route_id, direction_id, stops) {
+function routeDirectionStopsReceived(route_id, direction_id, stops) {
   return {
     type: types.ROUTE_DIRECTION_STOPS_RECEIVED,
     key: `${route_id}-${direction_id}`,

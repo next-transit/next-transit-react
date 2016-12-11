@@ -8,6 +8,7 @@ import route_directions from './route-directions';
 import route_types from './route-types';
 import settings from './settings';
 import stops from './stops';
+import trips from './trips';
 
 const reducer = combineReducers({
   agencies,
@@ -17,7 +18,8 @@ const reducer = combineReducers({
   route_directions,
   route_types,
   settings,
-  stops
+  stops,
+  trips
 });
 
 export default reducer;

@@ -12,8 +12,8 @@ function routeDirectionsRequested(state, action) {
 }
 
 function routeDirectionsReceived(state, action) {
-  let directions = state.directions;
-  directions[action.route_id] = action.directions;
+  let route_directions = state.route_directions;
+  route_directions[action.route_id] = action.directions;
 
   let loading = state.loading;
   loading[action.route_id] = false;
@@ -23,7 +23,7 @@ function routeDirectionsReceived(state, action) {
 
   return {
     ...state,
-    directions,
+    route_directions,
     loading,
     errors
   };
@@ -44,7 +44,7 @@ function routeDirectionsFailed(state, action) {
 }
 
 export default createReducer({
-  directions: {},
+  route_directions: {},
   loading: {},
   errors: {}
 }, {

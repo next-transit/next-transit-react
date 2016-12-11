@@ -23,13 +23,15 @@ export default class LayoutHeader extends Component {
 
     return(
       <header className="app-header">
-        <Link 
-          to={this.props.back_path}
-          className={back_classes} 
-          title="Go back"
-        >
-          <i className="icon-chevron-sign-left"></i>
-        </Link>
+        {this.props.back_path &&
+          <Link 
+            to={this.props.back_path}
+            className={back_classes} 
+            title="Go back"
+          >
+            <i className="icon-chevron-sign-left"></i>
+          </Link>
+        }
         <span className="app-title">{this.props.title}</span>
         <Link to="/options" className="app-header-btn">
           <i className="icon-reorder"></i>

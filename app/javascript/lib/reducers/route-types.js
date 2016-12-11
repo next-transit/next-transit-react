@@ -37,7 +37,7 @@ function routes_received(state, action) {
 }
 
 export default createReducer({
-  route_types: [],
+  route_types: null,
   route_types_loading: false,
   route_types_error: null,
   routes: []

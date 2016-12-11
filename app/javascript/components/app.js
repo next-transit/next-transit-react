@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+
 import { settingsRequested } from 'lib/actions/settings';
 import { agencyRequested } from 'lib/actions/agencies';
+import { page_route_type_updated } from 'lib/actions/page';
 import { routeTypesRequested } from 'lib/actions/route-types';
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
+import { tripsRequested } from 'lib/actions/trips';
 
 import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
@@ -19,32 +22,40 @@ export default class Application extends Component {
   componentWillMount() {
     this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
 
-    let { routeType, routeId, directionId } = this.props.params;
+    let { routeType, routeId, directionId, fromStopId, toStopId } = this.props.params;
 
-    if (routeType && !this.props.route_type) {
+    if (routeType) {
       this.props.dispatch(routeTypesRequested());
       this.props.dispatch(routesRequested(routeType));
     }
 
-    if (routeId && !this.props.route) {
+    if (routeId) {
       this.props.dispatch(routeRequested(routeId));
       this.props.dispatch(routeDirectionsRequested(routeId));
     }
 
-    if (routeId && directionId && !this.props.stops) {
+    if (routeId && directionId) {
       this.props.dispatch(routeDirectionStopsRequested(routeId, directionId));
+    }
+
+    if (routeId && directionId && fromStopId) {
+      this.props.dispatch(tripsRequested(routeId, directionId, fromStopId, toStopId));
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.settings && !nextProps.agency && !nextProps.isAgencyLoading) {
+    if (nextProps.settings && !nextProps.agency && !nextProps.is_agency_loading) {
       this.props.dispatch(agencyRequested(nextProps.settings.agency));
     }
 
-    let { routeType, routeId, directionId } = this.props.params;
+    let { routeType, routeId, directionId, fromStopId } = this.props.params;
     let nextRouteType = nextProps.params.routeType;
     let nextRouteId = nextProps.params.routeId;
     let nextDirectionId = nextProps.params.directionId;
+
+    if (routeType !== nextRouteType) {
+      this.props.dispatch(page_route_type_updated(nextRouteType));
+    }
 
     if (nextRouteType
       && nextRouteType !== routeType
@@ -69,6 +80,8 @@ export default class Application extends Component {
       this.props.dispatch(routeDirectionsRequested(nextRouteId));
     }
 
+    // If a route and direction is present
+    // and we don't already have stops, get them
     if (nextDirectionId
       && nextDirectionId !== directionId
       && !nextProps.stops
@@ -109,20 +122,27 @@ export default connect((state, params) => {
   let { routeType, routeId, directionId } = params.params;
   let stops_key = `${routeId}-${directionId}`;
 
+  let route_type;
+  if (state.route_types.route_types) {
+    route_type = state.route_types.route_types.find(type => {
+      return type.route_type_id === routeType;
+    });
+  }
+
   return {
     agency: state.agencies.agency,
-    isAgencyLoading: state.agencies.isAgencyLoading,
+    is_agency_loading: state.agencies.is_agency_loading,
 
     page: state.page,
     settings: state.settings.settings,
 
-    route_type: state.route_types.route_types[routeType],
+    route_type: route_type,
     route_types_loading: state.route_types.route_types_loading,
     route_types_error: state.route_types.route_types_error,
 
-    route: state.routes.routes[routeId],
-    route_error: state.routes.route_errors[routeId],
-    route_loading: state.routes.route_loading[routeId],
+    // route: state.routes.routes[routeId],
+    // route_error: state.routes.route_errors[routeId],
+    // route_loading: state.routes.route_loading[routeId],
 
     stops: state.stops.stops[stops_key],
     stops_loading: state.stops.stops_loading[stops_key],

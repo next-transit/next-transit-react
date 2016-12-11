@@ -51,9 +51,10 @@ function routesFailed(route_type_id, error) {
 
 export function routesRequested(route_type_id) {
   return (dispatch, getState) => {
+
     dispatch({
       type: types.ROUTES_REQUESTED,
-      route_type_id
+      route_type_id: route_type_id
     });
 
     getRoutes(route_type_id, (error, response, body) => {

@@ -4,13 +4,13 @@ import createReducer from './create-reducer';
 function routeRequested(state, action) {
   state.route_loading[action.slug] = true;
 
-  return state;
+  return { ...state };
 }
 
 function routeFailed(state, action) {
   state.route_errors[action.slug] = action.error;
 
-  return state;
+  return { ...state };
 }
 
 function routeReceived(state, action) {
@@ -18,14 +18,14 @@ function routeReceived(state, action) {
   state.route_loading[action.route.slug] = false;
   state.routes[action.route.slug] = action.route;
 
-  return state;
+  return { ...state };
 }
 
 
 function routesRequested(state, action) {
   state.routes_loading[action.route_type_id] = true;
 
-  return state;
+  return { ...state };
 }
 
 function routesReceived(state, action) {
@@ -33,24 +33,20 @@ function routesReceived(state, action) {
   state.routes_errors[action.route_type_id] = undefined;
   state.route_type_routes[action.route_type_id] = action.routes;
 
-  return state;
+  return { ...state };
 }
 
 function routesFailed(state, action) {
   state.routes_loading[action.route_type_id] = false;
   state.routes_errors[action.route_type_id] = action.error;
 
-  return state;
+  return { ...state };
 }
 
 export default createReducer({
   route_type_routes: {},
   routes_loading: {},
-  routes_errors: {},
-
-  routes: {},
-  route_loading: {},
-  route_errors: {}
+  routes_errors: {}
 }, {
   [types.ROUTE_REQUESTED]: routeRequested,
   [types.ROUTE_RECEIVED]: routeReceived,

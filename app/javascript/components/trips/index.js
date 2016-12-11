@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { pageStateUpdated } from 'lib/actions/page';
-import { routeDirectionStopsRequested } from 'lib/actions/stops';
 
 import View from 'components/shared/view';
-import SimpleNav from 'components/shared/simple-nav';
 import TripsHeader from 'components/shared/trips-header';
+import Trips from './trips';
 
-class DirectionHandler extends Component {
+class TripsHandler extends Component {
   componentDidMount() {
     const { routeType, routeId } = this.props.routeParams;
     const { route, direction } = this.props;
 
-    this.props.dispatch(pageStateUpdated({ back:`/${routeType}/${routeId}` }));
-
+    this.props.dispatch(pageStateUpdated({ back:this.props.back_path }));
+    
     if (route && direction) {
       this.props.dispatch(pageStateUpdated({
         title: `${route.route_short_name} - ${direction.direction_name}`
@@ -33,44 +31,45 @@ class DirectionHandler extends Component {
     }
   }
 
-  getStopItems() {
-    const { routeType, routeId, directionId } = this.props.routeParams;
-
-    return this.props.stops && this.props.stops.map((stop) => {
-      const path = `${this.props.back_path}/${stop.stop_id}`;
-
-      return (
-        <li key={`stop-${stop.stop_id}`}>
-          <Link to={path}>
-            <i className="icon-map-marker"></i>{' '}
-            <span>{stop.stop_name}</span>
-          </Link>
-        </li>
-      );
-    });
-  }
-
   render() {
     return (
-      <View name="stops" inner_content={false}>
+      <View name="trips" inner_content={false}>
         <TripsHeader 
           back_path={this.props.back_path} 
           from_stop={this.props.from_stop}
-          allow_choose={false}
         />
+        {/*this.props.all_trips &&
+          <div class="align-center">
+            {{#all_trips_days}}
+            <a href="?day={{val}}" class="btn{{#unless selected}} btn-secondary{{/unless}}">{{label}}</a>
+            {{/all_trips_days}}
+          </div>
+        */}
+
+        <div className="trips-subheader">
+          <div className="trips-subheader-stop trips-subheader-from">Departs</div>
+          <div className="trips-subheader-stop trips-subheader-to">Arrives</div>
+        </div>
+
         <div className="content-inner">
-          <SimpleNav>
-            {this.getStopItems()}
-          </SimpleNav>
+          <Trips 
+            show_realtime={this.props.route && this.props.route.has_realtime}
+            trips={this.props.trips || []} 
+          />
         </div>
       </View>
     );
   }
-}
+};
 
 export default connect((state, params) => {
-  let { routeType, routeId, directionId, fromStopId } = params.routeParams;
-  let stops_key = `${routeId}-${directionId}`;
+  let { 
+    routeType, 
+    routeId, 
+    directionId, 
+    fromStopId, 
+    toStopId 
+  } = params.routeParams;
   
   let directions = state.route_directions.directions[routeId];
   let direction;
@@ -80,17 +79,15 @@ export default connect((state, params) => {
   }
 
   let from_stop = state.stops.stops_by_id[fromStopId];
-  let back_path = `/${routeType}/${routeId}/${directionId}`;
-
-  if (from_stop) {
-    back_path += `/${from_stop.stop_id}`;
-  }
+  let to_stop = state.stops.stops_by_id[toStopId];
 
   return {
-    back_path,
+    back_path: `/${routeType}/${routeId}/${directionId}`,
+    route: state.routes.routes[routeId],
     direction,
     from_stop,
-    route: state.routes.routes[routeId],
-    stops: state.stops.stops[stops_key]
+    to_stop,
+    trips: state.trips.trips,
+    all_trips: false
   };
-})(DirectionHandler);
+})(TripsHandler);

@@ -4,7 +4,7 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   compression = require('compression'),
   hbs = require('hbs'),
-  port = process.env.PORT || 5000,
+  port = process.env.PORT || 6001,
   config = require('./config');
 
 var app = express();
