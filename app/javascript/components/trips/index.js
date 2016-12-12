@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { pageStateUpdated } from 'lib/actions/page';
+import { page_state_updated } from 'lib/actions/page';
 
 import View from 'components/shared/view';
 import TripsHeader from 'components/shared/trips-header';
@@ -12,10 +12,10 @@ class TripsHandler extends Component {
     const { routeType, routeId } = this.props.routeParams;
     const { route, direction } = this.props;
 
-    this.props.dispatch(pageStateUpdated({ back:this.props.back_path }));
+    this.props.dispatch(page_state_updated({ back:this.props.back_path }));
     
     if (route && direction) {
-      this.props.dispatch(pageStateUpdated({
+      this.props.dispatch(page_state_updated({
         title: `${route.route_short_name} - ${direction.direction_name}`
       }));
     }
@@ -25,7 +25,7 @@ class TripsHandler extends Component {
     const { route, direction } = nextProps;
 
     if ((!this.props.route || !this.props.direction) && route && direction) {
-      this.props.dispatch(pageStateUpdated({ 
+      this.props.dispatch(page_state_updated({ 
         title: `${route.route_short_name} - ${direction.direction_name}`
       }));
     }

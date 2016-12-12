@@ -1,6 +1,6 @@
 import { page as types } from 'lib/action-types';
 
-export function pageStateUpdated(changes) {
+export function page_state_updated(changes) {
   return (dispatch, getState) => {
     dispatch({
       type: types.PAGE_STATE_RECEIVED,

@@ -14,8 +14,8 @@ export default class Home extends Component {
     route_types: []
   };
 
-  getRouteTypes() {
-    return this.props.route_types.filter((route_type) => {
+  get_route_types() {
+    return (this.props.route_types || []).filter((route_type) => {
       return route_type.route_type_order >= 0;
     }).map((route_type) => {
       let path = '/' + route_type.slug;
@@ -23,7 +23,10 @@ export default class Home extends Component {
         path = '/' + route_type.parent + path;
       }
       return (
-        <li key={`route-type-${route_type.id}`} className={`home-route-type home-route-type-${route_type.slug}`}>
+        <li
+          key={`route-type-${route_type.id}`}
+          className={`home-route-type home-route-type-${route_type.slug}`}
+        >
           <Link to={path}>{route_type.label}</Link>
         </li>
       );
@@ -52,7 +55,7 @@ export default class Home extends Component {
         <div className="content-inner content-section">
           <nav className="simple-nav">
             <ul>
-              {this.getRouteTypes()}
+              {this.get_route_types()}
             </ul>
           </nav>
         </div>

@@ -18,7 +18,7 @@ export function routeTypesReceived(route_types) {
   };
 }
 
-export function routeTypesRequested() {
+export function route_types_requested() {
   return (dispatch, getState) => {
     dispatch({ type:types.ROUTE_TYPES_REQUESTED });
 

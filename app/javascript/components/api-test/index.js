@@ -9,7 +9,7 @@ import {
   page_to_stop_updated
 } from 'lib/actions/page';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
-import { routeTypesRequested } from 'lib/actions/route-types';
+import { route_types_requested } from 'lib/actions/route-types';
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
 import { tripsRequested } from 'lib/actions/trips';
@@ -87,7 +87,7 @@ class ApiTest extends Component {
   componentWillReceiveProps(nextProps) {
     // Fetch Route Types
     if (!nextProps.route_types && !nextProps.route_types_loading) {
-      this.props.dispatch(routeTypesRequested());
+      this.props.dispatch(route_types_requested());
     }
 
     // Set page-level route type based on 0-th route_type in the collection

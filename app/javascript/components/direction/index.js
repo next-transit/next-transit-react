@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { pageStateUpdated } from 'lib/actions/page';
+import { page_state_updated } from 'lib/actions/page';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
 
 import View from 'components/shared/view';
@@ -14,10 +14,10 @@ class DirectionHandler extends Component {
     const { routeType, routeId } = this.props.routeParams;
     const { route, direction } = this.props;
 
-    this.props.dispatch(pageStateUpdated({ back:`/${routeType}/${routeId}` }));
+    this.props.dispatch(page_state_updated({ back:`/${routeType}/${routeId}` }));
 
     if (route && direction) {
-      this.props.dispatch(pageStateUpdated({
+      this.props.dispatch(page_state_updated({
         title: `${route.route_short_name} - ${direction.direction_name}`
       }));
     }
@@ -27,7 +27,7 @@ class DirectionHandler extends Component {
     const { route, direction } = nextProps;
 
     if ((!this.props.route || !this.props.direction) && route && direction) {
-      this.props.dispatch(pageStateUpdated({ 
+      this.props.dispatch(page_state_updated({ 
         title: `${route.route_short_name} - ${direction.direction_name}`
       }));
     }

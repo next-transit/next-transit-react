@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { pageStateUpdated } from 'lib/actions/page';
+import { page_state_updated } from 'lib/actions/page';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
 import View from 'components/shared/view';
 
 class RouteHandler extends Component {
   componentDidMount() {
-    this.props.dispatch(pageStateUpdated({ back:`/${this.props.routeParams.routeType}` }));
+    this.props.dispatch(page_state_updated({ back:`/${this.props.routeParams.routeType}` }));
 
     if (this.props.route) {
-      this.props.dispatch(pageStateUpdated({ title:this.props.route.route_short_name }));
+      this.props.dispatch(page_state_updated({ title:this.props.route.route_short_name }));
     }
 
     if (!this.props.directions
@@ -23,7 +23,7 @@ class RouteHandler extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.route !== nextProps.route) {
-      this.props.dispatch(pageStateUpdated({ title:nextProps.route.route_short_name }));
+      this.props.dispatch(page_state_updated({ title:nextProps.route.route_short_name }));
     }
   }
 

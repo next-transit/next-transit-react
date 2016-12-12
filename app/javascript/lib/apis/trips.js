@@ -1,6 +1,6 @@
 import { request } from 'lib/http-utils';
 
-export function getTrips(route_id, direction_id, from_stop_id, to_stop_id, callback) {
+export function get_trips(route_id, direction_id, from_stop_id, to_stop_id, callback) {
   let stops = from_stop_id;
 
   if (to_stop_id) {

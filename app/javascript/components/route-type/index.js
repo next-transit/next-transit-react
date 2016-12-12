@@ -1,21 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { pageStateUpdated } from 'lib/actions/page';
+import { page_state_updated } from 'lib/actions/page';
 import View from 'components/shared/view';
 
 class RouteTypeHandler extends Component {
   componentDidMount() {
-    this.props.dispatch(pageStateUpdated({ back:'/' }));
+    this.props.dispatch(page_state_updated({ back:'/' }));
 
     if (this.props.route_type) {
-      this.props.dispatch(pageStateUpdated({ title:this.props.route_type.label }));
+      this.props.dispatch(page_state_updated({ title:this.props.route_type.label }));
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.route_type && nextProps.route_type) {
-      this.props.dispatch(pageStateUpdated({ title:nextProps.route_type.label }));
+      this.props.dispatch(page_state_updated({ title:nextProps.route_type.label }));
     }
   }
 

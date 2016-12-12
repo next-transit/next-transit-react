@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import { settingsRequested } from 'lib/actions/settings';
 import { agencyRequested } from 'lib/actions/agencies';
-import { page_route_type_updated } from 'lib/actions/page';
-import { routeTypesRequested } from 'lib/actions/route-types';
+import { page_route_type_updated } from 'lib/actions/page'; 
+import { route_types_requested } from 'lib/actions/route-types';
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
@@ -25,7 +25,7 @@ export default class Application extends Component {
     let { routeType, routeId, directionId, fromStopId, toStopId } = this.props.params;
 
     if (routeType) {
-      this.props.dispatch(routeTypesRequested());
+      this.props.dispatch(route_types_requested());
       this.props.dispatch(routesRequested(routeType));
     }
 
@@ -63,7 +63,7 @@ export default class Application extends Component {
       && !nextProps.route_types_loading
       && !nextProps.route_types_error) 
     {
-      this.props.dispatch(routeTypesRequested());
+      this.props.dispatch(route_types_requested());
       this.props.dispatch(routesRequested(nextRouteType));
     }
 
