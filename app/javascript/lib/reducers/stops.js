@@ -2,50 +2,68 @@ import { stops as types } from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function stopsRequested(state, action) {
-  let stops_loading = state.stops_loading;
-  stops_loading[action.key] = true;
+  const stopsLoading = {
+    ...state.stops_loading,
+    [action.key]: true
+  };
+  
+  const stopsErrors = {
+    ...state.stops_errors,
+    [action.key]: null
+  };
 
   return {
     ...state,
-    stops_loading
+    stops_loading: stopsLoading,
+    stops_errors: stopsErrors
   };
 }
 
 function stopsReceived(state, action) {
-  let {
-    stops_by_id,
-    stops_loading,
-    stops_errors,
-    stops
-  } = state;
+  const stops = {
+    ...state.stops,
+    [action.key]: action.stops
+  };
 
-  stops_loading[action.key] = false;
-  stops_errors[action.key] = undefined;
-  stops[action.key] = action.stops;
+  const stopsLoading = {
+    ...state.stops_loading,
+    [action.key]: false
+  };
+
+  const stopsById = {
+    ...state.stops_by_id
+  };
 
   action.stops.forEach((stop) => {
-    stops_by_id[stop.stop_id] = stop;
+    stopsById[stop.stop_id] = stop;
   });
 
   return {
-    stops_by_id,
+    ...state,
+    stops_by_id: stopsById,
     stops,
-    stops_loading,
-    stops_errors
+    stops_loading: stopsLoading
   };
 }
 
 function stopsFailed(state, action) {
-  let stops_loading = state.stops_loading;
-  stops_loading[action.key] = false;
+  const stopsLoading = {
+    ...state.stops_loading,
+    [action.key]: false
+  };
 
   let stops_errors = state.stops_errors;
   stops_errors[action.key] = action.error;
 
+  const stopsErrors = {
+    ...state.stops_errors,
+    [action.key]: action.error
+  };
+
   return {
     ...state,
-    stops_loading,
-    stops_errors
+    stops_loading: stopsLoading,
+    stops_errors: stopsErrors
   };
 }
 

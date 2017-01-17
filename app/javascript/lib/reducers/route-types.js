@@ -1,7 +1,7 @@
 import { route_types as types } from 'lib/action-types';
 import createReducer from './create-reducer';
 
-function route_types_requested(state, action) {
+function routeTypesRequested(state, action) {
   return {
     ...state,
     route_types_loading: true
@@ -42,7 +42,7 @@ export default createReducer({
   route_types_error: null,
   routes: []
 }, {
-  [types.ROUTE_TYPES_REQUESTED]: route_types_requested,
+  [types.ROUTE_TYPES_REQUESTED]: routeTypesRequested,
   [types.ROUTE_TYPES_RECEIVED]: route_types_received,
   [types.ROUTES_RECEIVED]: routes_received
 });

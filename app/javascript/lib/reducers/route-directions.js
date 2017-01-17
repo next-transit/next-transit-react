@@ -2,39 +2,52 @@ import { route_directions as types } from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function routeDirectionsRequested(state, action) {
-  let loading = state.loading;
-  loading[action.route_id] = true;
-
-  return {
-    ...state,
-    loading
+  const loading = {
+    ...state.loading,
+    [action.routeId]: true
   };
-}
 
-function routeDirectionsReceived(state, action) {
-  let route_directions = state.route_directions;
-  route_directions[action.route_id] = action.directions;
-
-  let loading = state.loading;
-  loading[action.route_id] = false;
-
-  let errors = state.errors;
-  errors[action.route_id] = undefined;
+  const errors = {
+    ...state.loading,
+    [action.routeId]: null
+  };
 
   return {
     ...state,
-    route_directions,
     loading,
     errors
   };
 }
 
-function routeDirectionsFailed(state, action) {
-  let loading = state.loading;
-  loading[action.route_id] = false;
+function routeDirectionsReceived(state, action) {
+  // Need to construct a new object via spread to defeat selector memoization
+  const routeDirections = {
+    ...state.routeDirections,
+    [action.routeId]: action.directions
+  };
+  
+  const loading = {
+    ...state.loading,
+    [action.routeId]: false
+  };
 
-  let errors = state.errors;
-  errors[action.route_id] = action.error;
+  return {
+    ...state,
+    routeDirections,
+    loading
+  };
+}
+
+function routeDirectionsFailed(state, action) {
+  const loading = {
+    ...state.loading,
+    [action.routeId]: false
+  };
+
+  const errors = {
+    ...state.loading,
+    [action.routeId]: action.error
+  };
 
   return {
     ...state,
@@ -44,7 +57,7 @@ function routeDirectionsFailed(state, action) {
 }
 
 export default createReducer({
-  route_directions: {},
+  routeDirections: {},
   loading: {},
   errors: {}
 }, {

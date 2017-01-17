@@ -1,13 +1,24 @@
 import { createSelector } from 'reselect';
 
-export const page_route_type_selector = createSelector(
+export const getPageRouteType = createSelector(
   state => state.route_types.route_types,
-  state => state.page.route_type,
-  (route_types, page_route_type) => {
-    if (route_types && page_route_type) {
-      return route_types.find(route_type => {
-        return route_type.slug === page_route_type;
+  state => state.page.routeType,
+  (routeTypes, pageRouteType) => {
+    if (routeTypes && pageRouteType) {
+      return routeTypes.find(route_type => {
+        return route_type.slug === pageRouteType;
       });
+    }
+  }
+);
+
+export const getFooterRouteTypes = createSelector(
+  state => state.route_types.route_types,
+  (routeTypes) => {
+    if (routeTypes) {
+      return routeTypes
+              .filter(routeType => routeType.menu_label)
+              .sort((a, b) => a.menu_label > b.menu_label);
     }
   }
 );

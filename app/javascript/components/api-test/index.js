@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import {
-  page_route_type_updated,
-  page_route_updated,
-  page_direction_updated,
-  page_from_stop_updated,
-  page_to_stop_updated
-} from 'lib/actions/page';
+import { pageStateUpdated } from 'lib/actions/page';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
-import { route_types_requested } from 'lib/actions/route-types';
+import { routeTypesRequested } from 'lib/actions/route-types';
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
 import { tripsRequested } from 'lib/actions/trips';
 
 import {
-  page_route_type_selector,
-  page_route_selector,
-  page_direction_selector,
+  getPageRouteType,
   page_from_stop_selector,
   page_to_stop_selector
 } from 'lib/selectors/page';
+import { getPageRoute } from 'lib/selectors/routes';
+import {
+  getPageRouteDirections,
+  getPageRouteDirectionsLoading,
+  getPageRouteDirection
+} from 'lib/selectors/directions';
 
 function AgencyView(props) {
   return (<p>{props.data.agency_name}</p>);
@@ -87,12 +85,14 @@ class ApiTest extends Component {
   componentWillReceiveProps(nextProps) {
     // Fetch Route Types
     if (!nextProps.route_types && !nextProps.route_types_loading) {
-      this.props.dispatch(route_types_requested());
+      this.props.dispatch(routeTypesRequested());
     }
 
     // Set page-level route type based on 0-th route_type in the collection
     if (!nextProps.page_route_type && nextProps.route_types) {
-      this.props.dispatch(page_route_type_updated(nextProps.route_types[0].slug));
+      this.props.dispatch(pageStateUpdated({
+        routeType: nextProps.route_types[0].slug
+      }));
     }
 
     // Fetch Routes for Route Type
@@ -105,7 +105,9 @@ class ApiTest extends Component {
 
     // Set page-level route based on 0-th route_id in the route_type_routes collection
     if (!nextProps.page_route && nextProps.route_type_routes) {
-      this.props.dispatch(page_route_updated(nextProps.route_type_routes[0].route_id));
+      this.props.dispatch(pageStateUpdated({
+        routeId: nextProps.route_type_routes[0].route_id
+      }));
     }
 
     // Fetch Directions for Route
@@ -118,7 +120,9 @@ class ApiTest extends Component {
 
     // Set page-level direction based on 0-th direction_id in the routes collection
     if (!nextProps.page_direction && nextProps.route_directions) {
-      this.props.dispatch(page_direction_updated(nextProps.route_directions[0].direction_id));
+      this.props.dispatch(pageStateUpdated({
+        directionId: nextProps.route_directions[0].direction_id
+      }));
     }
 
     // Fetch Stops for Route Direction
@@ -132,11 +136,15 @@ class ApiTest extends Component {
 
     // Set page-level from stop based on 0-th stop_id in the stops collection
     if (!nextProps.page_from_stop && nextProps.stops) {
-      this.props.dispatch(page_from_stop_updated(nextProps.stops[0].stop_id));
+      this.props.dispatch(pageStateUpdated({
+        fromStopId: nextProps.stops[0].stop_id
+      }));
     }
     // Set page-level to stop based on 1-th stop_id in the stops collection
     if (!nextProps.page_to_stop && nextProps.stops) {
-      this.props.dispatch(page_to_stop_updated(nextProps.stops[1].stop_id));
+      this.props.dispatch(pageStateUpdated({
+        toStopId: nextProps.stops[1].stop_id
+      }));
     }
 
     if (nextProps.page_route
@@ -194,16 +202,16 @@ class ApiTest extends Component {
 
 export default connect(state => {
   const {
-    route_type: page_route_type,
-    route_id: page_route_id
+    routeType: page_route_type,
+    routeId: page_route_id
   } = state.page;
 
-  const page_route = page_route_selector(state);
-  const page_direction = page_direction_selector(state);
+  const pageRoute = getPageRoute(state);
+  const pageDirection = getPageRouteDirection(state);
 
   let stops_key = '';
-  if (page_route && page_direction) {
-    stops_key = `${page_route.route_id}-${page_direction.direction_id}`;
+  if (pageRoute && pageDirection) {
+    stops_key = `${pageRoute.route_id}-${pageDirection.direction_id}`;
   }
 
   return {
@@ -212,8 +220,8 @@ export default connect(state => {
     agency: state.agencies.agency,
 
     // Directions
-    route_directions_loading: state.route_directions.loading[page_route_id],
-    route_directions: state.route_directions.route_directions[page_route_id],
+    route_directions_loading: getPageRouteDirectionsLoading(state),
+    route_directions: getPageRouteDirections(state),
 
     // Routes
     routes_loading: state.routes.routes_loading[page_route_type],
@@ -231,9 +239,9 @@ export default connect(state => {
     trips: state.trips.trips,
 
     page: state.page,
-    page_route_type: page_route_type_selector(state),
-    page_route: page_route,
-    page_direction: page_direction,
+    page_route_type: getPageRouteType(state),
+    page_route: pageRoute,
+    page_direction: pageDirection,
     page_from_stop: page_from_stop_selector(state),
     page_to_stop: page_to_stop_selector(state)
   };

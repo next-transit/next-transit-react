@@ -5,23 +5,24 @@ import classnames from 'classnames';
 export default class LayoutFooter extends Component {
   static propTypes = {
     active: PropTypes.bool,
-    slug: PropTypes.string,
-    menu_items: PropTypes.array
+    menuItems: PropTypes.array,
+    slug: PropTypes.string
   };
 
   static defaultProps = {
     active: false,
-    menu_items: [] // [{ slug:'', label:'' }]
+    menuItems: [], // [{ slug:'', label:'' }]
+    slug: null
   };
 
   getMenuItems() {
-    return this.props.menu_items.map((item) => {
-      let classes = classes('app-footer-btn', {
-        [item.slug]: !!item.slug
+    return this.props.menuItems && this.props.menuItems.map((item) => {
+      let classes = classnames('app-footer-btn', {
+        '-active': item.slug === this.props.slug
       });
       return (
-        <li>
-          <a href={`/${item.slug}`} className={classes}>{item.label}</a>
+        <li key={item.slug}>
+          <a href={`/${item.slug}`} className={classes}>{item.menu_label}</a>
         </li>
       );
     });

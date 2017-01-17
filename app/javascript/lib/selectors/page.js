@@ -1,48 +1,58 @@
 import { createSelector } from 'reselect';
 
-export const page_route_type_selector = createSelector(
-  state => state.route_types.route_types,
-  state => state.page.route_type,
-  (route_types, page_route_type) => {
-    if (route_types && page_route_type) {
-      return route_types.find(route_type => {
-        return route_type.slug === page_route_type;
-      });
+import { getPageRouteType } from 'lib/selectors/route-types';
+import { getPageRoute } from 'lib/selectors/routes';
+import { getPageRouteDirection } from 'lib/selectors/directions';
+
+export const getPageTitle = createSelector(
+  state => state.settings.settings,
+  getPageRouteType,
+  getPageRoute,
+  getPageRouteDirection,
+  (settings, pageRouteType, pageRoute, pageDirection) => {
+    let title = '';
+
+    if (settings) {
+      title = settings.app_title;
+
+      if (pageRouteType) {
+        title = `${pageRouteType.label} - ${settings.app_title}`;
+
+        if (pageRoute) {
+          title = `${pageRoute.route_short_name} - ${settings.app_title}`;
+
+          if (pageDirection) {
+            title = `${pageRoute.route_short_name} - ${pageDirection.direction_name} - ${settings.app_title}`;
+          }
+        }
+      }
+
+      return title;
     }
   }
 );
 
-export const page_route_selector = createSelector(
-  state => state.routes.route_type_routes,
-  state => state.page.route_type,
-  state => state.page.route_id,
-  (route_type_routes, route_type, route_id) => {
-    if (route_type_routes && route_type && route_id) {
-      const routes = route_type_routes[route_type];
+export const getBackPath = createSelector(
+  state => state.page,
+  (page) => {
+    // /type                              -> /
+    // /type/route                        -> /type
+    // /type/route/direction              -> /type/route
+    // /type/route/direction/from         -> /type/route/direction
+    // /type/route/direction/from/choose  -> /type/route/direction/from
+    // /type/route/direction/from/to      -> /type/route/direction/choose
 
-      if (routes) {
-        return routes.find(route => {
-          return route.route_id = route_id;
-        });
+    let backPath = '';
+    const pathParts = ['routeType', 'routeId', 'directionId', 'fromStopId', 'toStopId'];
+
+    pathParts.forEach((part, i) => {
+      if (i && page[part]) {
+        const previousPart = pathParts[i - 1];
+        backPath += `/${page[previousPart]}`;
       }
-    }
-  }
-);
+    });
 
-export const page_direction_selector = createSelector(
-  state => state.route_directions.route_directions,
-  state => state.page.route_id,
-  state => state.page.direction_id,
-  (route_directions, route_id, direction_id) => {
-    if (route_directions && route_id && typeof direction_id === 'number') {
-      const directions = route_directions[route_id];
-
-      if (directions) {
-        return directions.find(direction => {
-          return direction.direction_id === direction_id;
-        });
-      }
-    }
+    return backPath || '/';
   }
 );
 

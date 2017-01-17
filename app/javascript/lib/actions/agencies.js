@@ -45,7 +45,7 @@ export function agencyReceived(agency) {
   };
 }
 
-export function agencyRequested(agency_slug) {
+export function agency_request(agency_slug) {
   return (dispatch, getState) => {
     dispatch({ type:types.AGENCY_REQUESTED });
 

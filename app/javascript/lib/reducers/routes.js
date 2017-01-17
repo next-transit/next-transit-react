@@ -8,39 +8,75 @@ function routeRequested(state, action) {
 }
 
 function routeFailed(state, action) {
-  state.route_errors[action.slug] = action.error;
+  const routesLoading = { ...state.routes_loading };
+  const routesErrors = { ...state.routes_errors };
 
-  return { ...state };
+  routesLoading[action.route_type_id] = false;
+  routesErrors[action.route_type_id] = action.error;
+
+  return {
+    ...state,
+    routes_loading: routesLoading,
+    routes_errors: routesErrors
+  };
 }
 
 function routeReceived(state, action) {
   state.route_errors[action.route.slug] = undefined;
-  state.route_loading[action.route.slug] = false;
   state.routes[action.route.slug] = action.route;
 
-  return { ...state };
+  const routesLoading = { ...state.routes_loading };
+  routesLoading[action.route_type_id] = false;
+
+  return {
+    ...state,
+    routes_loading: routesLoading
+  };
 }
 
-
+/*
+ * ROUTES, by ROUTE TYPE
+ */
 function routesRequested(state, action) {
-  state.routes_loading[action.route_type_id] = true;
+  const routesLoading = { ...state.routes_loading };
+  const routesErrors = { ...state.routes_errors };
 
-  return { ...state };
+  routesLoading[action.route_type_id] = true;
+  routesErrors[action.route_type_id] = undefined;
+
+  return {
+    ...state,
+    routes_loading: routesLoading,
+    routes_errors: routesErrors
+  };
 }
 
 function routesReceived(state, action) {
-  state.routes_loading[action.route_type_id] = false;
-  state.routes_errors[action.route_type_id] = undefined;
-  state.route_type_routes[action.route_type_id] = action.routes;
+  const routesLoading = { ...state.routes_loading };
+  const routeTypeRoutes = { ...state.route_type_routes };
 
-  return { ...state };
+  routesLoading[action.route_type_id] = false;
+  routeTypeRoutes[action.route_type_id] = action.routes;
+
+  return {
+    ...state,
+    routes_loading: routesLoading,
+    route_type_routes: routeTypeRoutes
+  };
 }
 
 function routesFailed(state, action) {
-  state.routes_loading[action.route_type_id] = false;
-  state.routes_errors[action.route_type_id] = action.error;
+  const routesLoading = { ...state.routes_loading };
+  const routesErrors = { ...state.routes_errors };
 
-  return { ...state };
+  routesLoading[action.route_type_id] = false;
+  routesErrors[action.route_type_id] = action.error;
+
+  return {
+    ...state,
+    routes_loading: routesLoading,
+    routes_errors: routesErrors
+  };
 }
 
 export default createReducer({

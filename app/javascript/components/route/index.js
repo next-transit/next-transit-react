@@ -1,34 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { page_state_updated } from 'lib/actions/page';
-import { routeDirectionsRequested } from 'lib/actions/route-directions';
+
+import { getPageRouteDirections } from 'lib/selectors/directions';
+
 import View from 'components/shared/view';
 
 class RouteHandler extends Component {
-  componentDidMount() {
-    this.props.dispatch(page_state_updated({ back:`/${this.props.routeParams.routeType}` }));
-
-    if (this.props.route) {
-      this.props.dispatch(page_state_updated({ title:this.props.route.route_short_name }));
-    }
-
-    if (!this.props.directions
-      && !this.props.directions_loading
-      && !this.props.directions_error) 
-    {
-      this.props.dispatch(routeDirectionsRequested(this.props.routeParams.routeId));
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.route !== nextProps.route) {
-      this.props.dispatch(page_state_updated({ title:nextProps.route.route_short_name }));
-    }
-  }
-
   getDirectionItems() {
-    const { routeType, routeId } = this.props.routeParams;
+    const { routeType, routeId } = this.props.page;
 
     return this.props.directions && this.props.directions.map((direction, i) => {
       return (
@@ -49,13 +29,9 @@ class RouteHandler extends Component {
   }
 }
 
-export default connect((state, params) => {
-  let { routeId } = params.routeParams;
-
+export default connect((state) => {
   return {
-    route: state.routes.routes[routeId],
-    directions: state.route_directions.directions[routeId],
-    directions_loading: state.route_directions.loading[routeId],
-    directions_error: state.route_directions.errors[routeId]
+    page: state.page,
+    directions: getPageRouteDirections(state)
   };
 })(RouteHandler);

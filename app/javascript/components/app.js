@@ -2,15 +2,39 @@ import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
-import { settingsRequested } from 'lib/actions/settings';
-import { agencyRequested } from 'lib/actions/agencies';
-import { page_route_type_updated } from 'lib/actions/page'; 
-import { route_types_requested } from 'lib/actions/route-types';
+// Actions
+import { agency_request } from 'lib/actions/agencies';
+import { pageStateUpdated } from 'lib/actions/page'; 
 import { routeRequested, routesRequested } from 'lib/actions/routes';
 import { routeDirectionsRequested } from 'lib/actions/route-directions';
+import { routeTypesRequested } from 'lib/actions/route-types';
+import { settingsRequested } from 'lib/actions/settings';
 import { routeDirectionStopsRequested } from 'lib/actions/stops';
 import { tripsRequested } from 'lib/actions/trips';
 
+// Selectors
+import {
+  getPageRouteDirections,
+  getPageRouteDirectionsLoading,
+  getPageRouteDirectionsError
+} from 'lib/selectors/directions';
+import {
+  getPageTitle,
+  getBackPath
+} from 'lib/selectors/page';
+import {
+  getPageRoutes,
+  getPageRoutesLoading,
+  getPageRoutesRequestError
+} from 'lib/selectors/routes';
+import { getFooterRouteTypes } from 'lib/selectors/route-types';
+import {
+  getPageStops,
+  getPageStopsLoading,
+  getPageStopsError
+} from 'lib/selectors/stops';
+
+// Components
 import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
 
@@ -21,75 +45,98 @@ export default class Application extends Component {
 
   componentWillMount() {
     this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
-
-    let { routeType, routeId, directionId, fromStopId, toStopId } = this.props.params;
-
-    if (routeType) {
-      this.props.dispatch(route_types_requested());
-      this.props.dispatch(routesRequested(routeType));
-    }
-
-    if (routeId) {
-      this.props.dispatch(routeRequested(routeId));
-      this.props.dispatch(routeDirectionsRequested(routeId));
-    }
-
-    if (routeId && directionId) {
-      this.props.dispatch(routeDirectionStopsRequested(routeId, directionId));
-    }
-
-    if (routeId && directionId && fromStopId) {
-      this.props.dispatch(tripsRequested(routeId, directionId, fromStopId, toStopId));
-    }
+    this.props.dispatch(pageStateUpdated({ ...this.props.params }));
   }
 
   componentWillReceiveProps(nextProps) {
+    // If we don't have an Agency yet, fetch it
     if (nextProps.settings && !nextProps.agency && !nextProps.is_agency_loading) {
-      this.props.dispatch(agencyRequested(nextProps.settings.agency));
+      this.props.dispatch(agency_request(nextProps.settings.agency));
     }
 
-    let { routeType, routeId, directionId, fromStopId } = this.props.params;
-    let nextRouteType = nextProps.params.routeType;
-    let nextRouteId = nextProps.params.routeId;
-    let nextDirectionId = nextProps.params.directionId;
+    // Only request other data if we already have an agency
+    if (nextProps.agency) {
+      // If any of the page (url) params change, dispatch that
+      const pageChanges = this.getPageChanges(this.props, nextProps);
+      
+      if (pageChanges) {
+        this.props.dispatch(pageStateUpdated(pageChanges));
+      }
 
-    if (routeType !== nextRouteType) {
-      this.props.dispatch(page_route_type_updated(nextRouteType));
-    }
+      let {
+        routeType: pageRouteType,
+        routeId: pageRouteId,
+        directionId: pageDirectionId,
+        fromStopId: pageFromStopId,
+        toStopId: pageToStopId
+      } = nextProps.page;
 
-    if (nextRouteType
-      && nextRouteType !== routeType
-      && !nextProps.route_type
-      && !nextProps.route_types_loading
-      && !nextProps.route_types_error) 
-    {
-      this.props.dispatch(route_types_requested());
-      this.props.dispatch(routesRequested(nextRouteType));
-    }
+      // If we don't have route types yet, request them
+      if (!nextProps.routeTypes && !nextProps.routeTypesLoading && !nextProps.routeTypesError) {
+        this.props.dispatch(routeTypesRequested());
+      }
 
-    // If a route is present in the path, 
-    // and we don't already have it, 
-    // and it changed, fetch it
-    if (nextRouteId 
-      && nextRouteId !== routeId
-      && !nextProps.route
-      && !nextProps.route_loading
-      && !nextProps.route_error) 
-    {
-      this.props.dispatch(routeRequested(nextRouteId));
-      this.props.dispatch(routeDirectionsRequested(nextRouteId));
-    }
+      // If we have a selected route type but no related routes, fetch them
+      if (pageRouteType
+        && !nextProps.routes
+        && !nextProps.routesLoading
+        && !nextProps.routesError
+      ) {
+        this.props.dispatch(routesRequested(pageRouteType));
+      }
 
-    // If a route and direction is present
-    // and we don't already have stops, get them
-    if (nextDirectionId
-      && nextDirectionId !== directionId
-      && !nextProps.stops
-      && !nextProps.stops_loading
-      && !nextProps.stops_error)
-    {
-      this.props.dispatch(routeDirectionStopsRequested(nextRouteId, nextDirectionId));
+      // If we have a selected route, but no related directions, fetch them
+      if (pageRouteId 
+        && !nextProps.directions
+        && !nextProps.directionsLoading
+        && !nextProps.directionsError
+      ) {
+        this.props.dispatch(routeDirectionsRequested(pageRouteId));
+      }
+
+      // If we have a selected route, and direction, but no stops, fetch them
+      if (pageRouteId
+        && pageDirectionId
+        && !nextProps.stops
+        && !nextProps.stopsLoading
+        && !nextProps.stopsError
+      ) {
+        this.props.dispatch(routeDirectionStopsRequested(pageRouteId, pageDirectionId));
+      }
+
+      // If we have a selected route, direction, and from stop, but no trips, fetch them
+      if (pageRouteId
+        && pageDirectionId
+        && pageFromStopId
+        && !nextProps.trips
+        && !nextProps.tripsLoading
+        && !nextProps.tripsError
+      ) {
+        this.props.dispatch(tripsRequested(
+          pageRouteId,
+          pageDirectionId,
+          pageFromStopId,
+          pageToStopId
+        ));
+      }
     }
+  }
+
+  getPageChanges(prevProps, nextProps) {
+    let initialChanges = null;
+
+    const pageParams = ['routeType', 'routeId', 'directionId', 'fromStopId', 'toStopId'];
+
+    return pageParams.reduce((changes, paramName) => {
+      if (prevProps.params[paramName] !== nextProps.params[paramName]) {
+        return {
+          ...changes,
+          [paramName]: nextProps.params[paramName]
+        };
+      }
+
+      return changes;
+    }, initialChanges);
   }
 
   render() {
@@ -100,14 +147,18 @@ export default class Application extends Component {
     return(
       <div className="container">
         {this.props.settings &&
-          <Header title={this.props.page.title} back_path={this.props.page.back} />
+          <Header title={this.props.pageTitle} back_path={this.props.backPath} />
         }
         <div className={content_classes}>
           <div className="content-panel">
             {this.props.children}
           </div>
         </div>
-        <Footer active={this.props.page.footer} />
+        <Footer
+          menuItems={this.props.footerRouteTypes}
+          slug={this.props.page.routeType}
+          active={this.props.showFooter}
+        />
         {this.state.show_map &&
           <div className="map active">
             <div id="map-inner" className="dark map-inner"></div>
@@ -119,33 +170,35 @@ export default class Application extends Component {
 }
 
 export default connect((state, params) => {
-  let { routeType, routeId, directionId } = params.params;
-  let stops_key = `${routeId}-${directionId}`;
-
-  let route_type;
-  if (state.route_types.route_types) {
-    route_type = state.route_types.route_types.find(type => {
-      return type.route_type_id === routeType;
-    });
-  }
-
   return {
     agency: state.agencies.agency,
     is_agency_loading: state.agencies.is_agency_loading,
 
     page: state.page,
+    pageTitle: getPageTitle(state),
+    backPath: getBackPath(state),
+    showFooter: !!state.page.footer,
     settings: state.settings.settings,
 
-    route_type: route_type,
-    route_types_loading: state.route_types.route_types_loading,
-    route_types_error: state.route_types.route_types_error,
+    routeTypes: state.route_types.route_types,
+    routeTypesLoading: state.route_types.route_types_loading,
+    routeTypesError: state.route_types.route_types_error,
+    footerRouteTypes: getFooterRouteTypes(state),
 
-    // route: state.routes.routes[routeId],
-    // route_error: state.routes.route_errors[routeId],
-    // route_loading: state.routes.route_loading[routeId],
+    routes: getPageRoutes(state),
+    routesLoading: getPageRoutesLoading(state),
+    routesError: getPageRoutesRequestError(state),
+    
+    directions: getPageRouteDirections(state),
+    directionsLoading: getPageRouteDirectionsLoading(state),
+    directionsError: getPageRouteDirectionsError(state),
 
-    stops: state.stops.stops[stops_key],
-    stops_loading: state.stops.stops_loading[stops_key],
-    stops_error: state.stops.stops_errors[stops_key]
+    stops: getPageStops(state),
+    stopsLoading: getPageStopsLoading(state),
+    stopsError: getPageStopsError(state),
+
+    trips: state.trips.trips,
+    tripsLoad: state.trips.loading,
+    tripsError: state.trips.error
   };
 })(Application);

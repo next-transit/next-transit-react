@@ -1,24 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { page_state_updated } from 'lib/actions/page';
+
+import { getPageRouteType } from 'lib/selectors/route-types';
+import { getPageRoutes } from 'lib/selectors/routes';
+
 import View from 'components/shared/view';
 
 class RouteTypeHandler extends Component {
-  componentDidMount() {
-    this.props.dispatch(page_state_updated({ back:'/' }));
-
-    if (this.props.route_type) {
-      this.props.dispatch(page_state_updated({ title:this.props.route_type.label }));
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.route_type && nextProps.route_type) {
-      this.props.dispatch(page_state_updated({ title:nextProps.route_type.label }));
-    }
-  }
-
   getRouteItems() {
     return this.props.routes && this.props.routes.map((route) => {
       return (
@@ -42,10 +31,8 @@ class RouteTypeHandler extends Component {
 }
 
 export default connect((state, params) => {
-  let { routeType } = params.routeParams;
-
   return {
-    route_type: state.route_types.route_types[routeType],
-    routes: state.routes.route_type_routes[routeType]
+    routeType: getPageRouteType(state),
+    routes: getPageRoutes(state)
   };
 })(RouteTypeHandler);

@@ -21,12 +21,7 @@ export default {
   ]),
 
   page: actionsObject([
-    'PAGE_STATE_RECEIVED',
-    'PAGE_ROUTE_TYPE_RECEIVED',
-    'PAGE_ROUTE_RECEIVED',
-    'PAGE_DIRECTION_RECEIVED',
-    'PAGE_FROM_STOP_RECEIVED',
-    'PAGE_TO_STOP_RECEIVED'
+    'PAGE_STATE_RECEIVED'
   ]),
 
   recent_trips: actionsObject([

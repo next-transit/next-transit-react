@@ -1,3 +1,7 @@
+.app-layout {
+  height: 100%;
+}
+
 .app-header {
   @include clearfix;
   position: fixed;
@@ -147,6 +151,7 @@
         @include gradient-range(lighten($background_color, 8%), lighten($background_color, 4%));
       }
 
+      .app-footer .app-footer-btn.-active,
       .app-footer.subways .app-footer-btn.subways,
       .app-footer.buses .app-footer-btn.buses,
       .app-footer.trolleys .app-footer-btn.trolleys,

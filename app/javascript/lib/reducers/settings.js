@@ -4,7 +4,9 @@ import createReducer from './create-reducer';
 function settingsReceived(state, action) {
   return {
     ...state,
-    settings: action.settings
+    settings: {
+      ...action.settings
+    }
   };
 }
 

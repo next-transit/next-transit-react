@@ -14,7 +14,7 @@ export default class Home extends Component {
     route_types: []
   };
 
-  get_route_types() {
+  getRouteTypes() {
     return (this.props.route_types || []).filter((route_type) => {
       return route_type.route_type_order >= 0;
     }).map((route_type) => {
@@ -55,7 +55,7 @@ export default class Home extends Component {
         <div className="content-inner content-section">
           <nav className="simple-nav">
             <ul>
-              {this.get_route_types()}
+              {this.getRouteTypes()}
             </ul>
           </nav>
         </div>
