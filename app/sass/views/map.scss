@@ -1,9 +1,18 @@
-.map {
+.content {
 	position: relative;
-	display: none;
 }
-.map.active {
-	display: block;
+
+.map-container {
+	/*position: relative;*/
+}
+
+.map {
+	position: absolute;
+	top: 30px;
+	left: 0;
+
+	height: 360px;
+	width: 100%;
 }
 
 	.map-inner {
@@ -37,6 +46,11 @@
 			.map-results-list a:hover, .map-results-list a:active {
 				opacity: 0.8;
 			}
+
+.leaflet-container {
+    height: 360px;
+    width: 100%;
+}
 
 /* Leaflef/Mapbox overrides */
 .leaflet-popup-content {

@@ -3,7 +3,6 @@ import { createSelector } from 'reselect';
 const getPageRouteId = state => state.page.routeId;
 const getPageDirectionId = state => state.page.directionId;
 const getPageFromStopId = state => state.page.fromStopId;
-const getPageChooseStop = state => state.page.chooseStop;
 
 const getStopsKey = createSelector(
   getPageRouteId,
@@ -17,14 +16,13 @@ const getStopsKey = createSelector(
 
 export const getPageStops = createSelector(
   getPageFromStopId,
-  getPageChooseStop,
   getStopsKey,
   state => state.stops.stops,
-  (fromStopId, chooseStop, stopsKey, stopsByKey) => {
+  (fromStopId, stopsKey, stopsByKey) => {
     if (stopsKey) {
       let stops = stopsByKey[stopsKey];
 
-      if (fromStopId && chooseStop === 'choose' && stops) {
+      if (fromStopId && stops) {
         let afterFromStop = false;
         stops = stops.filter((stop) => {
           if (!afterFromStop && stop.stop_id === fromStopId) {

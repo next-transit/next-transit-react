@@ -11,7 +11,7 @@ import Trips from './trips';
 class TripsHandler extends Component {
   render() {
     return (
-      <View name="trips" inner_content={false}>
+      <View name="trips" innerContent={false}>
         <TripsHeader 
           back_path={this.props.backPath} 
           from_stop={this.props.fromStop}

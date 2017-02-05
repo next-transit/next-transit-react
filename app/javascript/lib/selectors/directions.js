@@ -35,10 +35,9 @@ export const getPageRouteDirection = createSelector(
   getPageDirectionId,
   getDirections,
   (pageRouteId, pageDirectionId, routeDirections) => {
-    const directions = routeDirections[pageRouteId];
+    const directionId = parseInt(pageDirectionId, 10) || 0;
+    const directions = routeDirections[pageRouteId] || [];
 
-    if (directions) {
-      return directions[pageDirectionId];
-    }
+    return directions.find(direction => direction.direction_id === directionId);
   }
 );

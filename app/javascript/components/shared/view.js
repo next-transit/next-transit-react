@@ -4,11 +4,11 @@ import SimpleNav from './simple-nav';
 export default class View extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
-    inner_content: PropTypes.bool
+    innerContent: PropTypes.bool
   };
 
   static defaultProps = {
-    inner_content: true
+    innerContent: true
   };
 
   getInnerContent() {
@@ -20,7 +20,7 @@ export default class View extends Component {
           </SimpleNav>
         </div>
       );
-    } else if (this.props.inner_content) {
+    } else if (this.props.innerContent) {
       return (
         <div className="content-inner content-section">
           {this.props.children}

@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { getPageRouteDirections } from 'lib/selectors/directions';
 
 import View from 'components/shared/view';
+import SimpleNav from 'components/shared/simple-nav';
 
 class RouteHandler extends Component {
   getDirectionItems() {
@@ -23,8 +24,26 @@ class RouteHandler extends Component {
   }
 
   render() {
+    const { routeType, routeId } = this.props.page;
+
     return (
-      <View name="directions" nav_items={this.getDirectionItems()} />
+      <View name="directions" innerContent={false}>
+        <div className="content-inner content-section">
+          <SimpleNav>
+            {this.getDirectionItems()}
+          </SimpleNav>
+        </div>
+
+        <div className="content-inner">
+          <SimpleNav>
+            <li>
+              <Link to={`/${routeType}/${routeId}/map`}>
+                Route Map
+              </Link>
+            </li>
+          </SimpleNav>
+        </div>
+      </View>
     );
   }
 }

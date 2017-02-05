@@ -61,6 +61,12 @@ export default {
     'SETTINGS_RECEIVED'
   ]),
 
+  shapes: actionsObject([
+    'ROUTE_SHAPES_REQUESTED',
+    'ROUTE_SHAPES_RECEIVED',
+    'ROUTE_SHAPES_FAILED'
+  ]),
+
   stops: actionsObject([
     'ROUTE_DIRECTION_STOPS_REQUESTED',
     'ROUTE_DIRECTION_STOPS_RECEIVED',

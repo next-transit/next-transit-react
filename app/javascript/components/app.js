@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
@@ -45,7 +46,23 @@ export default class Application extends Component {
 
   componentWillMount() {
     this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
-    this.props.dispatch(pageStateUpdated({ ...this.props.params }));
+
+    const paramChanges = { ...this.props.params };
+
+    if (paramChanges.toStopId === 'choose') {
+      paramChanges.chooseStop = true;
+      paramChanges.toStopId = null;
+    }
+
+    this.props.dispatch(pageStateUpdated(paramChanges));
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', () => {
+      this.getContentDimensions();
+    });
+
+    this.getContentDimensions();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -139,37 +156,63 @@ export default class Application extends Component {
     }, initialChanges);
   }
 
-  render() {
-    let content_classes = classnames('content', {
-      'hidden': !!this.state.show_map
-    });
+  getContentDimensions() {
+    let height = window.innerHeight;
+    let width = window.innerWidth;
+    let offset = 0;
 
+    const header = ReactDOM.findDOMNode(this.header);
+    const footer = ReactDOM.findDOMNode(this.footer);
+
+    if (this.container) {
+      width = this.container.clientWidth;
+    }
+
+    if (header) {
+      height -= header.clientHeight;
+      offset = header.clientHeight;
+    }
+
+    if (footer) {
+      height -= footer.clientHeight;
+    }
+
+    this.props.dispatch(pageStateUpdated({
+      contentHeight: height,
+      contentWidth: width,
+      contentOffset: offset
+    }));
+  }
+
+  render() {
     return(
-      <div className="container">
+      <div className="container" ref={(container) => { this.container = container; }}>
         {this.props.settings &&
-          <Header title={this.props.pageTitle} back_path={this.props.backPath} />
+          <Header
+            title={this.props.pageTitle}
+            back_path={this.props.backPath}
+            ref={(header) => { this.header = header; }}
+          />
         }
-        <div className={content_classes}>
+
+        <div className="content">
           <div className="content-panel">
             {this.props.children}
           </div>
         </div>
+
         <Footer
           menuItems={this.props.footerRouteTypes}
           slug={this.props.page.routeType}
           active={this.props.showFooter}
+          ref={(footer) => { this.footer = footer; }}
         />
-        {this.state.show_map &&
-          <div className="map active">
-            <div id="map-inner" className="dark map-inner"></div>
-          </div>
-        }
       </div>
     );
   }
 }
 
-export default connect((state, params) => {
+export default connect((state) => {
   return {
     agency: state.agencies.agency,
     is_agency_loading: state.agencies.is_agency_loading,

@@ -25,6 +25,11 @@ export default createReducer({
   back: null,
   footer: true,
 
+  // Content dimentions (for mapping)
+  contentHeight: 0,
+  contentWidth: 0,
+  contentOffset: 0,
+
   // current params
   routeType: null,
   routeId: null,
