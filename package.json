@@ -3,10 +3,16 @@
   "version": "3.0.0",
   "description": "NEXT-Transit Web",
   "main": "index.js",
+  "engines": {
+    "node": "6.9.2"
+  },
   "scripts": {
     "test": "npm test",
-    "start": "bin/build-sass-start & bin/build-js-start & bin/server-start",
-    "stop": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop"
+
+    "start-dev": "bin/build-sass-start & bin/build-js-start & bin/server-start",
+    "stop-dev": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop",
+
+    "start": "bin/build-sass & bin/build-js"
   },
   "repository": {
     "type": "git",
