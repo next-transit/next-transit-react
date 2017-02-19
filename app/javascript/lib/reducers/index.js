@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import agencies from './agencies';
+import map from './map';
 import page from './page';
 import recent_trips from './recent-trips';
 import routes from './routes';
@@ -13,6 +14,7 @@ import trips from './trips';
 
 const reducer = combineReducers({
   agencies,
+  map,
   page,
   recent_trips,
   routes,

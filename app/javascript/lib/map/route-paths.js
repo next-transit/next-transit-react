@@ -15,34 +15,80 @@ export function getRouteBounds(routePaths) {
   }, { w:180, s:180, e:-180, n:-180 });
 }
 
-export function getLayerDefinition(routePaths, routeColor) {
-  // Reverse position of lat/long in arrays
-  const reorderedPaths = routePaths.map((path) => {
+function getRoutePathsFeatures(routePaths) {
+  return routePaths.map((path) => {
+    // Reverse position of lat/long in arrays
     return path.map(coord => [coord[1], coord[0]])
+  }).map((path) => {
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: path
+      }
+    };
   });
+}
+
+function getRouteStopsFeatures(routeStops) {
+  return routeStops.map((stop) => {
+    return {
+      type: 'Feature',
+      properties: {
+        direction_id: stop.direction_id,
+        stop_id: stop.stop_id
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [stop.stop_lon, stop.stop_lat]
+      }
+    }
+  });
+}
+
+export function getRouteSource(routePaths, routeStops) {
+  const pathFeatures = getRoutePathsFeatures(routePaths);
+  const stopFeatures = getRouteStopsFeatures(routeStops);
 
   return {
-    id: 'route-paths',
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: pathFeatures.concat(stopFeatures)
+    }
+  };
+}
+
+export function getPathsStyleDefinition(routeId, routeColor) {
+  return {
+    id: `route-paths-${routeId}`,
     type: 'line',
+    source: `route-vectors-${routeId}`,
     layout: {
       'line-join': 'round',
       'line-cap': 'round'
     },
     paint: {
-      'line-color': routeColor,
+      'line-color': (routeColor || '#a33'),
       'line-width': 5,
       'line-opacity': 0.65
     },
-    source: {
-      'type': 'geojson',
-      'data': {
-        'type': 'Feature',
-        'properties': {},
-        'geometry': {
-          'type': 'MultiLineString',
-          'coordinates': reorderedPaths
-        }
-      }
-    }
+    filter: ['==', '$type', 'LineString']
+  };
+}
+
+export function getStopsStyleDefinition(routeId, routeColor) {
+  return {
+    id: `route-stops-${routeId}`,
+    type: 'circle',
+    source: `route-vectors-${routeId}`,
+    paint: {
+      'circle-radius': 5,
+      'circle-color': '#fff',
+      'circle-opacity': 0.65,
+      'circle-stroke-width': 3,
+      'circle-stroke-color': (routeColor || '#a33')
+    },
+    filter: ['==', '$type', 'Point']
   };
 }

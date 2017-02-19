@@ -21,6 +21,7 @@ export default (
     <Route path="/options" component={Options} />
     <Route path="/patterns" component={Patterns} />
     <Route path="/api-test" component={ApiTest} />
+    <Route path="/locate" component={Map} />
     <Route path="/:routeType/:routeId/map" component={Map} />
     <Route path="/:routeType/:routeId/:directionId/:fromStopId/choose" component={Direction} />
     <Route path="/:routeType/:routeId/:directionId/:fromStopId/:toStopId" component={Trips} />

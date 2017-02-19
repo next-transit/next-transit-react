@@ -20,6 +20,12 @@ export default {
     'AGENCY_FAILED'
   ]),
 
+  map: actionsObject([
+    'USER_LOCATION_REQUESTED',
+    'USER_LOCATION_RECEIVED',
+    'USER_LOCATION_REQUEST_FAILED'
+  ]),
+
   page: actionsObject([
     'PAGE_STATE_RECEIVED'
   ]),
@@ -64,7 +70,11 @@ export default {
   shapes: actionsObject([
     'ROUTE_SHAPES_REQUESTED',
     'ROUTE_SHAPES_RECEIVED',
-    'ROUTE_SHAPES_FAILED'
+    'ROUTE_SHAPES_FAILED',
+
+    'BOUNDING_BOX_SHAPES_REQUESTED',
+    'BOUNDING_BOX_SHAPES_RECEIVED',
+    'BOUNDING_BOX_SHAPES_FAILED'
   ]),
 
   stops: actionsObject([

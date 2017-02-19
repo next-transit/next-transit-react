@@ -3,6 +3,12 @@ import xhr from 'xhr';
 let API_URL;
 let API_KEY;
 
+function getQueryParams(options) {
+  const params = Object.assign({ api_key:API_KEY }, options.params);
+  const paramsArray = Object.keys(params).map((key) => `${key}=${params[key]}`);
+  return paramsArray.join('&');
+}
+
 export function setSettings(settings) {
   if (settings) {
     API_URL = settings.api_url;
@@ -19,9 +25,11 @@ export function request(options, callback) {
     };
   }
 
+  const paramsString = getQueryParams(options);
+
   options.method = options.method || 'GET';
 
-  options.url = `${API_URL}/${options.url}?api_key=${API_KEY}`;
+  options.url = `${API_URL}/${options.url}?${paramsString}`;
 
   xhr(options, (error, response, body) => {
     if (response && body && Object.prototype.toString.call(body) === '[object String]') {

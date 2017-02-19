@@ -139,6 +139,12 @@ export default class Application extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.settings && this.props.settings) {
+      this.getContentDimensions();
+    }
+  }
+
   getPageChanges(prevProps, nextProps) {
     let initialChanges = null;
 

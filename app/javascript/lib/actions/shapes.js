@@ -1,5 +1,5 @@
 import { shapes as types } from 'lib/action-types';
-import { getRouteShapes } from 'lib/apis/shapes';
+import { getRouteShapes, getBoundingBoxShapes } from 'lib/apis/shapes';
 
 function routeShapesReceived(routeId, shapes) {
   return {
@@ -29,6 +29,36 @@ export function routeShapesRequested(routeId) {
         dispatch(routeShapesFailed(routeId, error));
       } else {
         dispatch(routeShapesReceived(routeId, body.data));
+      }
+    });
+  };
+};
+
+function boundingBoxShapesReceived(shapes) {
+  return {
+    type: types.BOUNDING_BOX_SHAPES_RECEIVED,
+    shapes
+  };
+}
+
+function boundingBoxShapesFailed(error) {
+  return {
+    type: types.BOUNDING_BOX_SHAPES_FAILED,
+    error
+  };
+}
+
+export function boundingBoxShapesRequested(bounds) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.BOUNDING_BOX_SHAPES_REQUESTED
+    });
+
+    getBoundingBoxShapes(bounds, (error, response, body) => {
+      if (error) {
+        dispatch(boundingBoxShapesFailed(error));
+      } else {
+        dispatch(boundingBoxShapesReceived(body.data));
       }
     });
   };

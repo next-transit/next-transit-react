@@ -28,6 +28,30 @@ function routeShapesFailed(state, action) {
   };
 }
 
+function boundingBoxShapesRequested(state, action) {
+  return {
+    ...state,
+    loading: true,
+    error: null
+  };
+}
+
+function boundingBoxShapesReceived(state, action) {
+  return {
+    ...state,
+    loading: false,
+    shapes: action.shapes
+  };
+}
+
+function boundingBoxShapesFailed(state, action) {
+  return {
+    ...state,
+    loading: false,
+    error: action.error
+  };
+}
+
 export default createReducer({
   routeId: null,
   shapes: null,
@@ -36,5 +60,9 @@ export default createReducer({
 }, {
   [types.ROUTE_SHAPES_REQUESTED]: routeShapesRequested,
   [types.ROUTE_SHAPES_RECEIVED]: routeShapesReceived,
-  [types.ROUTE_SHAPES_FAILED]: routeShapesFailed
+  [types.ROUTE_SHAPES_FAILED]: routeShapesFailed,
+
+  [types.BOUNDING_BOX_SHAPES_REQUESTED]: boundingBoxShapesRequested,
+  [types.BOUNDING_BOX_SHAPES_RECEIVED]: boundingBoxShapesReceived,
+  [types.BOUNDING_BOX_SHAPES_FAILED]: boundingBoxShapesFailed
 });
