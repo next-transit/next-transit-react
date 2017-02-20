@@ -10,7 +10,7 @@
     "test": "npm test",
     "start": "bin/build-sass-start & bin/build-js-start & bin/server-start",
     "stop": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop",
-    "start-prod": "bin/build-sass & bin/build-js & PORT=80 node ./server/index.js"
+    "start-prod": "bin/build-sass & bin/build-js & node ./server/index.js"
   },
   "repository": {
     "type": "git",
