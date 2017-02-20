@@ -1,24 +1,24 @@
 import { getAgencies, getAgency } from 'lib/apis/agencies';
-import { agencies as types } from 'lib/action-types';
+import types from 'lib/action-types';
 
 // AGENCIES
 export function agenciesFailed(error) {
   return {
     error,
-    type: types.AGENCIES_FAILED
+    type: types.agencies.AGENCIES_FAILED
   };
 }
 
 export function agenciesReceived(agencies) {
   return {
     agencies,
-    type: types.AGENCIES_RECEIVED
+    type: types.agencies.AGENCIES_RECEIVED
   };
 }
 
 export function agenciesRequested() {
   return (dispatch, getState) => {
-    dispatch({ type:types.AGENCIES_REQUESTED });
+    dispatch({ type:types.agencies.AGENCIES_REQUESTED });
 
     getAgencies((error, response, body) => {
       if (error) {
@@ -34,20 +34,20 @@ export function agenciesRequested() {
 export function agencyFailed(error) {
   return {
     error,
-    type: types.AGENCY_FAILED
+    type: types.agencies.AGENCY_FAILED
   };
 }
 
 export function agencyReceived(agency) {
   return {
     agency,
-    type: types.AGENCY_RECEIVED
+    type: types.agencies.AGENCY_RECEIVED
   };
 }
 
 export function agency_request(agency_slug) {
   return (dispatch, getState) => {
-    dispatch({ type:types.AGENCY_REQUESTED });
+    dispatch({ type:types.agencies.AGENCY_REQUESTED });
 
     getAgency(agency_slug, (error, response, body) => {
       if (error) {

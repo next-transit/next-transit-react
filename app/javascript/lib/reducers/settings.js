@@ -1,4 +1,4 @@
-import { settings as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function settingsReceived(state, action) {
@@ -13,5 +13,5 @@ function settingsReceived(state, action) {
 export default createReducer({
   settings: null
 }, {
-  [types.SETTINGS_RECEIVED]: settingsReceived
+  [types.settings.SETTINGS_RECEIVED]: settingsReceived
 });

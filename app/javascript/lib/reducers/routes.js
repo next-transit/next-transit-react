@@ -1,4 +1,4 @@
-import { routes as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function routeRequested(state, action) {
@@ -84,11 +84,11 @@ export default createReducer({
   routes_loading: {},
   routes_errors: {}
 }, {
-  [types.ROUTE_REQUESTED]: routeRequested,
-  [types.ROUTE_RECEIVED]: routeReceived,
-  [types.ROUTE_FAILED]: routeFailed,
+  [types.routes.ROUTE_REQUESTED]: routeRequested,
+  [types.routes.ROUTE_RECEIVED]: routeReceived,
+  [types.routes.ROUTE_FAILED]: routeFailed,
 
-  [types.ROUTES_REQUESTED]: routesRequested,
-  [types.ROUTES_RECEIVED]: routesReceived,
-  [types.ROUTES_FAILED]: routesFailed
+  [types.routes.ROUTES_REQUESTED]: routesRequested,
+  [types.routes.ROUTES_RECEIVED]: routesReceived,
+  [types.routes.ROUTES_FAILED]: routesFailed
 });

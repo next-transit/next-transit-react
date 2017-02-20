@@ -1,16 +1,16 @@
-import { routes as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import { getRoute, getRoutes } from 'lib/apis/routes';
 
 function routeReceived(route) {
   return {
-    type: types.ROUTE_RECEIVED,
+    type: types.routes.ROUTE_RECEIVED,
     route
   };
 }
 
 function routeFailed(route_id, error) {
   return {
-    type: types.ROUTE_FAILED,
+    type: types.routes.ROUTE_FAILED,
     route_id,
     error
   };
@@ -19,7 +19,7 @@ function routeFailed(route_id, error) {
 export function routeRequested(route_id) {
   return (dispatch, getState) => {
     dispatch({
-      type:types.ROUTE_REQUESTED,
+      type:types.routes.ROUTE_REQUESTED,
       route_id
     });
 
@@ -35,7 +35,7 @@ export function routeRequested(route_id) {
 
 function routesReceived(route_type_id, routes) {
   return {
-    type: types.ROUTES_RECEIVED,
+    type: types.routes.ROUTES_RECEIVED,
     route_type_id,
     routes
   };
@@ -43,7 +43,7 @@ function routesReceived(route_type_id, routes) {
 
 function routesFailed(route_type_id, error) {
   return {
-    type: types.ROUTES_FAILED,
+    type: types.routes.ROUTES_FAILED,
     route_type_id,
     error
   };
@@ -53,7 +53,7 @@ export function routesRequested(route_type_id) {
   return (dispatch, getState) => {
 
     dispatch({
-      type: types.ROUTES_REQUESTED,
+      type: types.routes.ROUTES_REQUESTED,
       route_type_id: route_type_id
     });
 

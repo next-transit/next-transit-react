@@ -1,4 +1,4 @@
-import { stops as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import { getRouteDirectionStops } from 'lib/apis/stops';
 
 /*
@@ -6,7 +6,7 @@ import { getRouteDirectionStops } from 'lib/apis/stops';
  */
 function routeDirectionStopsFailed(route_id, direction_id, error) {
   return {
-    type: types.ROUTE_DIRECTION_STOPS_FAILED,
+    type: types.stops.ROUTE_DIRECTION_STOPS_FAILED,
     key: `${route_id}-${direction_id}`,
     error
   };
@@ -14,7 +14,7 @@ function routeDirectionStopsFailed(route_id, direction_id, error) {
 
 function routeDirectionStopsReceived(route_id, direction_id, stops) {
   return {
-    type: types.ROUTE_DIRECTION_STOPS_RECEIVED,
+    type: types.stops.ROUTE_DIRECTION_STOPS_RECEIVED,
     key: `${route_id}-${direction_id}`,
     stops
   };
@@ -23,7 +23,7 @@ function routeDirectionStopsReceived(route_id, direction_id, stops) {
 export function routeDirectionStopsRequested(route_id, direction_id) {
   return (dispatch, getState) => {
     dispatch({ 
-      type: types.ROUTE_DIRECTION_STOPS_REQUESTED,
+      type: types.stops.ROUTE_DIRECTION_STOPS_REQUESTED,
       key: `${route_id}-${direction_id}`
     });
 

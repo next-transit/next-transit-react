@@ -1,4 +1,4 @@
-import { stops as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function stopsRequested(state, action) {
@@ -73,7 +73,7 @@ export default createReducer({
   stops_loading: {},
   stops_errors: {}
 }, {
-  [types.ROUTE_DIRECTION_STOPS_REQUESTED]: stopsRequested,
-  [types.ROUTE_DIRECTION_STOPS_RECEIVED]: stopsReceived,
-  [types.ROUTE_DIRECTION_STOPS_FAILED]: stopsFailed
+  [types.stops.ROUTE_DIRECTION_STOPS_REQUESTED]: stopsRequested,
+  [types.stops.ROUTE_DIRECTION_STOPS_RECEIVED]: stopsReceived,
+  [types.stops.ROUTE_DIRECTION_STOPS_FAILED]: stopsFailed
 });

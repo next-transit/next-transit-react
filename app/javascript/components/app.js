@@ -39,7 +39,7 @@ import {
 import Header from 'components/layout/header';
 import Footer from 'components/layout/footer';
 
-export default class Application extends Component {
+export class Application extends Component {
   state = {
     show_map: null
   };

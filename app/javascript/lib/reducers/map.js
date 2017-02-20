@@ -1,4 +1,4 @@
-import { map as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function userLocationRequested(state, action) {
@@ -30,7 +30,7 @@ export default createReducer({
   userLocationLoading: false,
   userLocationError: null
 }, {
-  [types.USER_LOCATION_REQUESTED]: userLocationRequested,
-  [types.USER_LOCATION_RECEIVED]: userLocationReceived,
-  [types.USER_LOCATION_REQUEST_FAILED]: userLocationRequestFailed
+  [types.map.USER_LOCATION_REQUESTED]: userLocationRequested,
+  [types.map.USER_LOCATION_RECEIVED]: userLocationReceived,
+  [types.map.USER_LOCATION_REQUEST_FAILED]: userLocationRequestFailed
 });

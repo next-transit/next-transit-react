@@ -1,4 +1,4 @@
-import { trips as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import { get_trips } from 'lib/apis/trips';
 
 /*
@@ -6,21 +6,21 @@ import { get_trips } from 'lib/apis/trips';
  */
 function trips_failed(error) {
   return {
-    type: types.TRIPS_FAILED,
+    type: types.trips.TRIPS_FAILED,
     error
   };
 }
 
 function trips_received(trips) {
   return {
-    type: types.TRIPS_RECEIVED,
+    type: types.trips.TRIPS_RECEIVED,
     trips
   };
 }
 
 export function tripsRequested(route_id, direction_id, from_stop_id, to_stop_id) {
   return (dispatch, getState) => {
-    dispatch({ type:types.TRIPS_REQUESTED });
+    dispatch({ type:types.trips.TRIPS_REQUESTED });
 
     get_trips(route_id, direction_id, from_stop_id, to_stop_id, (error, response, body) => {
       if (error) {

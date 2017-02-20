@@ -1,4 +1,4 @@
-import { trips as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function trips_requested(state, action) {
@@ -31,7 +31,7 @@ export default createReducer({
   loading: false,
   error: null
 }, {
-  [types.TRIPS_REQUESTED]: trips_requested,
-  [types.TRIPS_RECEIVED]: trips_received,
-  [types.TRIPS_FAILED]: trips_failed
+  [types.trips.TRIPS_REQUESTED]: trips_requested,
+  [types.trips.TRIPS_RECEIVED]: trips_received,
+  [types.trips.TRIPS_FAILED]: trips_failed
 });

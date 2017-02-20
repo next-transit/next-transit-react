@@ -1,4 +1,4 @@
-import { settings as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import { setSettings } from 'lib/http-utils';
 
 const SETTING_NAMES = [
@@ -11,7 +11,7 @@ const SETTING_NAMES = [
 
 export function settingsRequested(elem) {
   return (dispatch, getState) => {
-    dispatch({ type: types.SETTINGS_REQUESTED });
+    dispatch({ type: types.settings.SETTINGS_REQUESTED });
 
     let settings = {};
 
@@ -30,6 +30,6 @@ export function settingsReceived(settings) {
 
   return {
     settings,
-    type: types.SETTINGS_RECEIVED
+    type: types.settings.SETTINGS_RECEIVED
   };
 }

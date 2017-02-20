@@ -1,4 +1,4 @@
-import { agencies as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function agenciesReceived(state, action) {
@@ -28,7 +28,7 @@ export default createReducer({
   agency: null,
   is_agency_loading: false
 }, {
-  [types.AGENCIES_RECEIVED]: agenciesReceived,
-  [types.AGENCY_REQUESTED]: agency_request,
-  [types.AGENCY_RECEIVED]: agencyReceived
+  [types.agencies.AGENCIES_RECEIVED]: agenciesReceived,
+  [types.agencies.AGENCY_REQUESTED]: agency_request,
+  [types.agencies.AGENCY_RECEIVED]: agencyReceived
 });

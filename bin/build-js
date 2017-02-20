@@ -17,6 +17,7 @@ var plugins = [
 ];
 
 webpack({
+  cache: true,
   entry: './app/javascript/index.js',
   output: {
     path: resolve('./public/js'),
@@ -36,8 +37,13 @@ webpack({
   module: {
     loaders: [{
       test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader?stage=0&optional=runtime'
+      loader: 'babel-loader',
+      include: [
+        resolve('./app/javascript')
+      ],
+      query: {
+        cacheDirectory: true
+      }
     }]
   }
 }, function(err, stats) {

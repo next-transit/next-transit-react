@@ -1,4 +1,4 @@
-import { shapes as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function routeShapesRequested(state, action) {
@@ -58,11 +58,11 @@ export default createReducer({
   loading: false,
   error: null
 }, {
-  [types.ROUTE_SHAPES_REQUESTED]: routeShapesRequested,
-  [types.ROUTE_SHAPES_RECEIVED]: routeShapesReceived,
-  [types.ROUTE_SHAPES_FAILED]: routeShapesFailed,
+  [types.shapes.ROUTE_SHAPES_REQUESTED]: routeShapesRequested,
+  [types.shapes.ROUTE_SHAPES_RECEIVED]: routeShapesReceived,
+  [types.shapes.ROUTE_SHAPES_FAILED]: routeShapesFailed,
 
-  [types.BOUNDING_BOX_SHAPES_REQUESTED]: boundingBoxShapesRequested,
-  [types.BOUNDING_BOX_SHAPES_RECEIVED]: boundingBoxShapesReceived,
-  [types.BOUNDING_BOX_SHAPES_FAILED]: boundingBoxShapesFailed
+  [types.shapes.BOUNDING_BOX_SHAPES_REQUESTED]: boundingBoxShapesRequested,
+  [types.shapes.BOUNDING_BOX_SHAPES_RECEIVED]: boundingBoxShapesReceived,
+  [types.shapes.BOUNDING_BOX_SHAPES_FAILED]: boundingBoxShapesFailed
 });

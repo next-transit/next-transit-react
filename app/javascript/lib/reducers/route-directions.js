@@ -1,4 +1,4 @@
-import { route_directions as types } from 'lib/action-types';
+import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
 function routeDirectionsRequested(state, action) {
@@ -61,7 +61,7 @@ export default createReducer({
   loading: {},
   errors: {}
 }, {
-  [types.ROUTE_DIRECTIONS_REQUESTED]: routeDirectionsRequested,
-  [types.ROUTE_DIRECTIONS_RECEIVED]: routeDirectionsReceived,
-  [types.ROUTE_DIRECTIONS_FAILED]: routeDirectionsFailed
+  [types.route_directions.ROUTE_DIRECTIONS_REQUESTED]: routeDirectionsRequested,
+  [types.route_directions.ROUTE_DIRECTIONS_RECEIVED]: routeDirectionsReceived,
+  [types.route_directions.ROUTE_DIRECTIONS_FAILED]: routeDirectionsFailed
 });
