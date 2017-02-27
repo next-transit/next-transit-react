@@ -2,8 +2,8 @@
 
 echo "[build-sass-prod] Compiling Sass files..." 1>&2;
 
-./bin/build-sass
-./bin/build-sass -f agencies/septa.scss
-./bin/build-sass -f agencies/trimet.scss
+./bin/build-sass -c & 
+./bin/build-sass -c -f agencies/septa.scss & 
+./bin/build-sass -c -f agencies/trimet.scss
 
 echo "[build-sass-prod] Done." 1>&2;
