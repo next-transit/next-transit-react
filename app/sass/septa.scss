@@ -3,8 +3,8 @@ $colors: (
 	subways: 		#477997,
 	trolleys:		#539442,
 	trains:			#477997,
-	bsl:			#f58220,
-	mfl:			#107dc1
+	bsl:				#f58220,
+	mfl:				#107dc1
 );
 
 @each $type, $color in $colors {
