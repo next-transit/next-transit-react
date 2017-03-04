@@ -3,6 +3,7 @@ import { IndexRoute, Route } from 'react-router';
 
 import App from 'components/app.js';
 
+import About from 'components/about';
 import Direction from 'components/direction';
 import Home from 'components/home';
 import Map from 'components/map';
@@ -18,6 +19,7 @@ import ApiTest from 'components/api-test';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Home} />
+    <Route path="/about" component={About} />
     <Route path="/options" component={Options} />
     <Route path="/patterns" component={Patterns} />
     <Route path="/api-test" component={ApiTest} />
