@@ -112,7 +112,7 @@ export default class Options extends Component {
           </div>
         </Section>
 
-        {this.props.recent_trips.length &&
+        {!!this.props.recent_trips.length &&
           <Section title="Recent Trips" show_clear>
             <div className="content-inner">
               <nav className="simple-nav">
@@ -130,18 +130,6 @@ export default class Options extends Component {
               <li>
                 <Link to="/about">
                   About{' '}<i className="btn-right icon-angle-right"></i>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </Section>
-
-        <Section inset>
-          <nav className="simple-nav">
-            <ul>
-              <li>
-                <Link to="/feedback">
-                  Feedback{' '}<i className="btn-right icon-angle-right"></i>
                 </Link>
               </li>
             </ul>
