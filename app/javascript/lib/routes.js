@@ -12,6 +12,7 @@ import Options from 'components/options';
 import Patterns from 'components/patterns';
 import RouteType from 'components/route-type';
 import RouteHandler from 'components/route';
+import Search from 'components/search';
 import Trips from 'components/trips';
 
 import ApiTest from 'components/api-test';
@@ -24,6 +25,7 @@ export default (
     <Route path="/patterns" component={Patterns} />
     <Route path="/api-test" component={ApiTest} />
     <Route path="/locate" component={Map} />
+    <Route path="/search/:term" component={Search} />
     <Route path="/:routeType/:routeId/map" component={Map} />
     <Route path="/:routeType/:routeId/:directionId/:fromStopId/choose" component={Direction} />
     <Route path="/:routeType/:routeId/:directionId/:fromStopId/:toStopId" component={Trips} />

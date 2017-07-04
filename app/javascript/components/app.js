@@ -45,7 +45,9 @@ export class Application extends Component {
   };
 
   componentWillMount() {
-    this.props.dispatch(settingsRequested(document.getElementById('next-transit-env')));
+    const envNode = document.getElementById('next-transit-env');
+    this.props.dispatch(settingsRequested(envNode));
+    // document.body.removeChild(envNode);
 
     const paramChanges = { ...this.props.params };
 
@@ -146,8 +148,6 @@ export class Application extends Component {
   }
 
   getPageChanges(prevProps, nextProps) {
-    let initialChanges = null;
-
     const pageParams = ['routeType', 'routeId', 'directionId', 'fromStopId', 'toStopId'];
 
     return pageParams.reduce((changes, paramName) => {
@@ -159,7 +159,7 @@ export class Application extends Component {
       }
 
       return changes;
-    }, initialChanges);
+    }, null);
   }
 
   getContentDimensions() {
@@ -207,19 +207,25 @@ export class Application extends Component {
           </div>
         </div>
 
-        <Footer
-          menuItems={this.props.footerRouteTypes}
-          slug={this.props.page.routeType}
-          active={this.props.showFooter}
-          ref={(footer) => { this.footer = footer; }}
-        />
+        {!this.props.isHome &&
+          <Footer
+            menuItems={this.props.footerRouteTypes}
+            slug={this.props.page.routeType}
+            active={this.props.showFooter}
+            ref={(footer) => { this.footer = footer; }}
+          />
+        }
       </div>
     );
   }
 }
 
-export default connect((state) => {
+export default connect((state, params) => {
+  const isHome = params.location.pathname === '/';
+
   return {
+    isHome,
+
     agency: state.agencies.agency,
     is_agency_loading: state.agencies.is_agency_loading,
 

@@ -7,6 +7,7 @@ import recent_trips from './recent-trips';
 import routes from './routes';
 import route_directions from './route-directions';
 import route_types from './route-types';
+import search from './search';
 import settings from './settings';
 import shapes from './shapes';
 import stops from './stops';
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   routes,
   route_directions,
   route_types,
+  search,
   settings,
   shapes,
   stops,

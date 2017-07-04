@@ -62,6 +62,12 @@ export default {
     'ROUTE_TYPES_FAILED'
   ]),
 
+  search: actionsObject([
+    'SEARCH_REQUESTED',
+    'SEARCH_RECEIVED',
+    'SEARCH_FAILED'
+  ]),
+
   settings: actionsObject([
     'SETTINGS_REQUESTED',
     'SETTINGS_RECEIVED'

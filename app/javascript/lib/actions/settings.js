@@ -6,7 +6,8 @@ const SETTING_NAMES = [
   'api_key',
   'api_url',
   'search_text',
-  'app_title'
+  'app_title',
+  'twitter_acct'
 ];
 
 export function settingsRequested(elem) {

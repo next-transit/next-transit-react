@@ -6,25 +6,11 @@ import { pageStateUpdated } from 'lib/actions/page';
 import Home from './home';
 
 class HomeHandler extends Component {
-  static propTypes = {
-    twitter_acct: PropTypes.string
-  };
-
-  static defaultProps = {
-    twitter_acct: ''
-  };
-
   componentDidMount() {
     this.props.dispatch(pageStateUpdated({ footer:false }));
   }
 
   render() {
-    let search_text;
-
-    if (this.props.settings) {
-      search_text = this.props.settings.search_text;
-    }
-
     if (this.props.route_types_error) {
       return (
         <div>Oops, couldn't load route types</div>
@@ -33,8 +19,9 @@ class HomeHandler extends Component {
 
     return (
       <Home
-        search_text={search_text}
+        search_text={this.props.settings.search_text}
         route_types={this.props.route_types}
+        twitter_acct={this.props.settings.twitter_acct}
       />
     );
   }
@@ -43,6 +30,6 @@ class HomeHandler extends Component {
 export default connect((state) => {
   return {
     route_types: state.route_types.route_types,
-    settings: state.settings.settings
+    settings: state.settings.settings || {}
   };
 })(HomeHandler);

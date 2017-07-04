@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { browserHistory, Link } from 'react-router';
+
+import SearchForm from 'components/shared/search-form';
 
 export default class Home extends Component {
   static propTypes = {
@@ -13,6 +15,16 @@ export default class Home extends Component {
     twitter_acct: '',
     route_types: []
   };
+
+  constructor(...args) {
+    super(...args);
+
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+  }
+
+  handleFormSubmit(searchTerm) {
+    browserHistory.push(`/search/${window.encodeURIComponent(searchTerm)}`);
+  }
 
   getRouteTypes() {
     return (this.props.route_types || []).filter((route_type) => {
@@ -37,10 +49,7 @@ export default class Home extends Component {
     return (
       <div className="home">
         <div className="row">
-          <form className="content-inset home-search" action="/search" method="GET">
-            <input type="text" name="term" placeholder={this.props.search_text} />{' '}
-            <button className="btn">Go</button>
-          </form>
+          <SearchForm onFormSubmit={this.handleFormSubmit} />
 
           <div className="content-inner home-recent">
             <div className="simple-nav smaller">
@@ -72,7 +81,7 @@ export default class Home extends Component {
           {this.props.twitter_acct && 
             <p>
               Follow{' '}
-              <a href="http://twitter.com/{this.props.twitter_acct}">
+              <a href={`http://twitter.com/${this.props.twitter_acct}`}>
                 @{this.props.twitter_acct}
               </a>{' '}
               for info and updates.
