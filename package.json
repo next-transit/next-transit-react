@@ -4,7 +4,8 @@
   "description": "NEXT-Transit Web",
   "main": "index.js",
   "engines": {
-    "node": "6.9.2"
+    "node": "8.4.x",
+    "npm": "5.4.x"
   },
   "scripts": {
     "test": "npm test",
