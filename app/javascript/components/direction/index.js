@@ -13,7 +13,11 @@ import TripsHeader from 'components/shared/trips-header';
 class DirectionHandler extends Component {
   getStopItems() {
     return this.props.stops && this.props.stops.map((stop) => {
-      const path = `${this.props.backPath}/${this.props.direction.direction_id}/${stop.stop_id}`;
+      let path = `${this.props.backPath}/${this.props.direction.direction_id}/${stop.stop_id}`;
+
+      if (this.props.fromStop) {
+        path = `${this.props.backPath}/${this.props.fromStop.stop_id}/${stop.stop_id}`;
+      }
 
       return (
         <li key={`stop-${stop.stop_id}`}>
@@ -44,7 +48,7 @@ class DirectionHandler extends Component {
   }
 }
 
-export default connect((state, params) => {
+export default connect((state) => {
   return {
     backPath: getBackPath(state),
     direction: getPageRouteDirection(state),

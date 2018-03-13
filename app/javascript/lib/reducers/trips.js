@@ -1,14 +1,14 @@
 import types from 'lib/action-types';
 import createReducer from './create-reducer';
 
-function trips_requested(state, action) {
+function tripsRequested(state, action) {
   return {
     ...state,
     loading: true
   };
 }
 
-function trips_received(state, action) {
+function tripsReceived(state, action) {
   return {
     ...state,
     loading: false,
@@ -17,7 +17,7 @@ function trips_received(state, action) {
   };
 }
 
-function trips_failed(state, action) {
+function tripsFailed(state, action) {
   return {
     ...state,
     loading: false,
@@ -31,7 +31,7 @@ export default createReducer({
   loading: false,
   error: null
 }, {
-  [types.trips.TRIPS_REQUESTED]: trips_requested,
-  [types.trips.TRIPS_RECEIVED]: trips_received,
-  [types.trips.TRIPS_FAILED]: trips_failed
+  [types.trips.TRIPS_REQUESTED]: tripsRequested,
+  [types.trips.TRIPS_RECEIVED]: tripsReceived,
+  [types.trips.TRIPS_FAILED]: tripsFailed
 });

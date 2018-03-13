@@ -42,7 +42,7 @@ export default class TripsHeader extends Component {
 
         <span className="trips-header-to-stop">
           {this.props.to_stop &&
-            <Link to={this.props.back_path}>
+            <Link to={`${this.props.back_path}/${this.props.from_stop.stop_id}/choose`}>
               <span>{this.props.to_stop.stop_name}</span>{' '}
               <i className="icon-map-marker"></i>
             </Link>

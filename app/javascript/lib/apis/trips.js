@@ -1,11 +1,19 @@
 import { request } from 'lib/http-utils';
 
-export function get_trips(route_id, direction_id, from_stop_id, to_stop_id, callback) {
-  let stops = from_stop_id;
+export function getTrips(routeId, directionId, fromStopId, toStopId, offset, callback) {
+  let stops = fromStopId;
+  const params = {};
 
-  if (to_stop_id) {
-    stops += `...${to_stop_id}`;
+  if (toStopId) {
+    stops += `...${toStopId}`;
   }
 
-  request(`routes/${route_id}/directions/${direction_id}/stops/${stops}/trips`, callback);
+  if (offset) {
+    params.offset = offset;
+  }
+
+  request({
+    url: `routes/${routeId}/directions/${directionId}/stops/${stops}/trips`,
+    params: params
+  }, callback);
 };

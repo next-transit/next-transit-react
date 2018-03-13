@@ -1,28 +1,18 @@
-import cookie from 'cookie';
-
 function getTrips(cookieName) {
-  let cookies = cookie.parse(document.cookie);
-  let trips = [];
+  const tripsJSON = window.localStorage.getItem(cookieName);
 
-  if (cookies[cookieName]) {
-    let parsed_trips;
-
-    try { parsed_trips = JSON.parse(cookies[cookieName].replace(/^j:/, '')); }
-    catch (e) { }
-
-    if (parsed_trips) {
-      trips = parsed_trips;
+  if (tripsJSON) {
+    try { return JSON.parse(tripsJSON); }
+    catch(error) {
+      window.console && console.error(error);
     }
   }
 
-  return trips;
+  return null;
 }
 
 function setTrips(cookieName, trips) {
-  document.cookie = cookie.serialize(cookieName, JSON.stringify(trips), {
-    httpOnly: true,
-    maxAge: (60 * 60 * 24 * 365.4) // 1 year
-  });
+  window.localStorage.setItem(cookieName, JSON.stringify(trips));
 }
 
 export function getRecentTrips(callback) {
@@ -33,52 +23,78 @@ export function getSavedTrips(callback) {
   callback(getTrips('saved_trips'));
 };
 
-export function saveRecentTrip(recent_trip, callback) {
-  let recent_trips = getTrips('recent_trips') || [];
-  let saved_trips = getTrips('saved_trips') || [];
+export function addRecentTrip(recentTrip, callback) {
+  const recentTrips = getTrips('recent_trips') || [];
+
+  // Remove existing, if present
+  const existingIdx = recentTrips.find(trip => trip.key === recentTrip.key);
+
+  if (existingIdx > -1) {
+    recentTrips.splice(existingIdx, 1);
+  }
+
+  // Add to the top
+  recentTrips.unshift(recentTrip);
+
+  // Trim to 5 items
+  if (recentTrips.length > 5) {
+    recentTrips.splice(5);
+  }
+
+  setTrips('recent_trips', recentTrips);
+
+  callback(getTrips('recent_trips'));
+};
+
+export function saveRecentTrip(recentTrip, callback) {
+  const recentTrips = getTrips('recent_trips') || [];
+  const savedTrips = getTrips('saved_trips') || [];
   
   // If this trip was already saved, remove it and re-add it to the 
   // beginning of the array
-  let existing_saved_idx = saved_trips.findIndex((trip) => {
-    return trip.key === recent_trip.key;
-  });
+  const existingSavedIdx = savedTrips.findIndex(trip => trip.key === recentTrip.key);
 
-  if (existing_saved_idx > -1) {
-    saved_trips.splice(existing_saved_idx, 1);
+  if (existingSavedIdx > -1) {
+    savedTrips.splice(existingSavedIdx, 1);
   }
 
-  saved_trips.unshift(recent_trip);
+  savedTrips.unshift(recentTrip);
 
-  setTrips('saved_trips', saved_trips);
+  setTrips('saved_trips', savedTrips);
 
   // Update Recent trip to be "saved"
-  let existing_recent_idx = recent_trips.findIndex((trip) => {
-    return trip.key === recent_trip.key;
-  });
+  const existingRecentIdx = recentTrips.findIndex(trip => trip.key === recentTrip.key);
 
-  if (existing_recent_idx > -1) {
-    recent_trip.saved = true;
-    recent_trips[existing_recent_idx] = recent_trip;
-    setTrips('recent_trips', recent_trips);
+  if (existingRecentIdx > -1) {
+    recentTrip.saved = true;
+    recentTrips[existingRecentIdx] = recentTrip;
+    setTrips('recent_trips', recentTrips);
   }
 
-  callback(saved_trips, recent_trips);
+  callback(recentTrips, savedTrips);
 };
 
 export function deleteSavedTrip(key, callback) {
-  let saved_trips = getTrips('saved_trips') || [],
-      remove_idx = -1;
+  const savedTrips = getTrips('saved_trips') || [];
+  const recentTrips = getTrips('recent_trips') || [];
 
-  saved_trips.forEach(function(saved_trip, idx) {
-    if(saved_trip.key === key) {
-      remove_idx = idx;
-    }
-  });
+  const removeIdx = savedTrips.findIndex(trip => trip.key === key);
+  const recentTripIdx = recentTrips.findIndex(trip => trip.key === key);
 
-  if(remove_idx > -1) {
-    saved_trips.splice(remove_idx, 1);
-    setTrips('saved_trips', saved_trips);
+  if(removeIdx > -1) {
+    savedTrips.splice(removeIdx, 1);
+    setTrips('saved_trips', savedTrips);
   }
 
-  callback(saved_trips);
+  if(recentTripIdx > -1) {
+    recentTrips[recentTripIdx].saved = false;
+    setTrips('recent_trips', recentTrips)
+  }
+
+  callback(recentTrips, savedTrips);
 };
+
+export function clearRecentTrips(callback) {
+  setTrips('recent_trips', []);
+  callback([]);
+}

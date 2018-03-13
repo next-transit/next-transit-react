@@ -13,6 +13,7 @@ export default class Options extends Component {
   static propTypes = {
     recent_trips: PropTypes.array,
     saved_trips: PropTypes.array,
+    onClearClick: PropTypes.func,
     on_saved_trip_deleted: PropTypes.func,
     on_recent_trip_saved: PropTypes.func
   };
@@ -20,8 +21,9 @@ export default class Options extends Component {
   static defaultProps = {
     recent_trips: [],
     saved_trips: [],
-    on_saved_trip_deleted: function(key) {},
-    on_recent_trip_saved: function(recent_trip) {}
+    onClearClick: () => {},
+    on_saved_trip_deleted: (key) => {},
+    on_recent_trip_saved: (recent_trip) => {}
   };
 
   handle_delete_trip(event) {
@@ -113,7 +115,11 @@ export default class Options extends Component {
         </Section>
 
         {!!this.props.recent_trips.length &&
-          <Section title="Recent Trips" show_clear>
+          <Section
+            title="Recent Trips"
+            onClearClick={this.props.onClearClick}
+            showClear
+          >
             <div className="content-inner">
               <nav className="simple-nav">
                 <ul>

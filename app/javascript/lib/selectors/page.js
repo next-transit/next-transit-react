@@ -4,16 +4,21 @@ import { getPageRouteType } from 'lib/selectors/route-types';
 import { getPageRoute } from 'lib/selectors/routes';
 import { getPageRouteDirection } from 'lib/selectors/directions';
 
+const ROUTE_TITLES = {
+  '/about': 'About',
+  '/options': 'Options'
+};
+
 export const getPageTitle = createSelector(
   state => state.settings.settings,
+  (state, location) => location,
   getPageRouteType,
   getPageRoute,
   getPageRouteDirection,
-  (settings, pageRouteType, pageRoute, pageDirection) => {
-    let title = '';
-
+  (settings, location, pageRouteType, pageRoute, pageDirection) => {
     if (settings) {
-      title = settings.app_title;
+      let title = settings.app_title;
+      const routeTitle = ROUTE_TITLES[location.pathname];
 
       if (pageRouteType) {
         title = `${pageRouteType.label} - ${settings.app_title}`;
@@ -25,6 +30,10 @@ export const getPageTitle = createSelector(
             title = `${pageRoute.route_short_name} - ${pageDirection.direction_name} - ${settings.app_title}`;
           }
         }
+      }
+
+      if (routeTitle) {
+        title = `${routeTitle} - ${settings.app_title}`;
       }
 
       return title;

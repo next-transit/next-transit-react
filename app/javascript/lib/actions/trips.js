@@ -1,32 +1,33 @@
 import types from 'lib/action-types';
-import { get_trips } from 'lib/apis/trips';
+import { getTrips } from 'lib/apis/trips';
 
 /*
  * TRIPS
  */
-function trips_failed(error) {
+function tripsFailed(error) {
   return {
     type: types.trips.TRIPS_FAILED,
     error
   };
 }
 
-function trips_received(trips) {
+function tripsReceived(trips, offset) {
   return {
     type: types.trips.TRIPS_RECEIVED,
-    trips
+    trips,
+    offset
   };
 }
 
-export function tripsRequested(route_id, direction_id, from_stop_id, to_stop_id) {
+export function tripsRequested(routeId, directionId, fromStopId, toStopId, offset) {
   return (dispatch, getState) => {
     dispatch({ type:types.trips.TRIPS_REQUESTED });
 
-    get_trips(route_id, direction_id, from_stop_id, to_stop_id, (error, response, body) => {
+    getTrips(routeId, directionId, fromStopId, toStopId, offset, (error, response, body) => {
       if (error) {
-        dispatch(trips_failed(error));
+        dispatch(tripsFailed(error));
       } else {
-        dispatch(trips_received(body.data));
+        dispatch(tripsReceived(body.data, offset));
       }
     });
   };

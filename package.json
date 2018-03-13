@@ -52,7 +52,7 @@
     "cookie": "^0.3.1",
     "express": "^4.13.4",
     "hbs": "^4.0.0",
-    "mapbox-gl": "^0.32.1",
+    "mapbox-gl": "^0.44.0",
     "node-sass": "^3.7.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",

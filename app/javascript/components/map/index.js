@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 
 import { userLocationRequested } from 'lib/actions/map';
+import { requestLocations } from 'lib/actions/realtime';
+
+import { getShapeRouteInfos, getVehicles, getVehicleById } from 'lib/selectors/map';
 import {
   routeShapesRequested,
   boundingBoxShapesRequested
@@ -13,7 +16,7 @@ import { getPageRoute } from 'lib/selectors/routes';
 import Map from './map';
 import MapRoutesList from './routes-list';
 
-class MapHandler extends Component {
+class MapContainer extends Component {
   static propTypes = {
     offset: PropTypes.number,
     height: PropTypes.number,
@@ -33,11 +36,16 @@ class MapHandler extends Component {
   constructor(...args) {
     super(...args);
 
+    this.handleRouteListHover = this.handleRouteListHover.bind(this);
     this.handleMapMove = this.handleMapMove.bind(this);
+    this.handleRouteClick = this.handleRouteClick.bind(this);
     this.handleStopClick = this.handleStopClick.bind(this);
+    this.handleVehicleClick = this.handleVehicleClick.bind(this);
   }
 
   state = {
+    highlightedRoute: null,
+    trackVehicles: false,
     userLocation: null
   };
 
@@ -49,9 +57,30 @@ class MapHandler extends Component {
     if (this.props.shouldLocate) {
       this.props.dispatch(userLocationRequested());
     }
+
+    if (this.props.route) {
+      this.setState({ trackVehicles:true });
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillUnmount() {
+    if (this.vehiclesInterval) {
+      clearInterval(this.vehiclesInterval);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.trackVehicles && this.state.trackVehicles) {
+      this.requestVehicles();
+
+      clearInterval(this.vehiclesInterval);
+      this.vehiclesInterval = setInterval(() => {
+        this.requestVehicles();
+      }, 25 * 1000);
+    }
+  }
+
+  componentWillReceiveProps(nextProps, nextState) {
     if (nextProps.routeId
       && !nextProps.shapes
       && !nextProps.shapesLoading
@@ -59,6 +88,21 @@ class MapHandler extends Component {
     ) {
       this.props.dispatch(routeShapesRequested(nextProps.routeId));
     }
+
+    if (!this.props.route && nextProps.route && !nextState.trackVehicles) {
+      this.setState({ trackVehicles:true });
+    }
+  }
+
+  requestVehicles() {
+    this.props.dispatch(requestLocations(
+      this.props.route.route_type_slug,
+      this.props.route.slug
+    ));
+  }
+
+  handleRouteListHover(routeId) {
+    this.setState({ highlightedRoute:routeId });
   }
 
   handleMapMove(mapBounds) {
@@ -72,55 +116,31 @@ class MapHandler extends Component {
     }
   }
 
+  handleRouteClick(routePath) {
+    if (routePath) {
+      browserHistory.push(routePath);
+    }
+  }
+
   handleStopClick(directionId, stopId) {
     const { routeType, routeId } = this.props.page;
 
     browserHistory.push(`/${routeType}/${routeId}/${directionId}/${stopId}`);
   }
 
-  sortRouteInfo(a, b) {
-    if (a.route_short_name > b.route_short_name) {
-      return 1;
-    } else if (a.route_short_name < b.route_short_name) {
-      return -1;
-    }
+  handleVehicleClick(vehicleId) {
+    const { routeType, routeId } = this.props.page;
 
-    return 0;
+    browserHistory.push(`/${routeType}/${routeId}/map?vehicle=${vehicleId}`);
   }
 
   render() {
-    const routeColor = (this.props.route || {}).color;
-    const routePaths = (this.props.shapes || {}).paths;
-    const routeStops = (this.props.shapes || {}).stops;
-
-    let routesInfo = this.props.shapes;
-
-    if (routeColor && routePaths && routeStops) {
-      routesInfo = [{
-        id: this.props.routeId,
-        color: routeColor,
-        paths: routePaths,
-        stops: routeStops
-      }];
-    }
-
-    if (routesInfo) {
-      routesInfo = routesInfo.sort(this.sortRouteInfo).map((routeInfo) => {
-        return {
-          id: routeInfo.route_id,
-          label: routeInfo.route_short_name,
-          color: routeInfo.route_color || routeInfo.color,
-          paths: routeInfo.paths,
-          stops: routeInfo.stops
-        };
-      });
-    }
-
     const containerStyle = {
       top: this.props.offset || 0,
       width: this.props.width,
-      height: this.props.height + (this.props.offset || 0)
+      height: this.props.height// + (this.props.offset || 0)
     };
+    console.log('selectedVehicle', this.props.selectedVehicle);
 
     return(
       <div className="map-container" style={containerStyle}>
@@ -141,22 +161,30 @@ class MapHandler extends Component {
             mapStyle={this.props.mapStyle}
             accessToken={this.props.accessToken}
             userLocation={this.props.userLocation}
-            routes={routesInfo}
+            routes={this.props.routeInfos}
+            highlightedRoute={this.state.highlightedRoute}
+            onRouteClicked={this.handleRouteClick}
             onStopClicked={this.handleStopClick}
+            onVehicleClicked={this.handleVehicleClick}
             onMapMove={this.handleMapMove}
             fitToShapes={!!this.props.routeId}
+            vehicles={this.props.vehicles}
+            selectedVehicle={this.props.selectedVehicle}
           />
         }
 
-        {routesInfo &&
-          <MapRoutesList routes={routesInfo} />
+        {this.props.routeInfos &&
+          <MapRoutesList
+            onHover={this.handleRouteListHover}
+            routes={this.props.routeInfos}
+          />
         }
       </div>
     );
   }
 }
 
-export default connect((state, { params, route }) => {
+export default connect((state, { params, route, location }) => {
   return {
     settingsAgency: state.settings.settings.agency,
 
@@ -169,6 +197,8 @@ export default connect((state, { params, route }) => {
     routeId: params.routeId,
     route: getPageRoute(state),
 
+    routeInfos: getShapeRouteInfos(state),
+
     shapes: state.shapes.shapes,
     shapesRouteId: state.shapes.routeId,
     shapesLoading: state.shapes.loading,
@@ -177,6 +207,10 @@ export default connect((state, { params, route }) => {
     shouldLocate: route.path === '/locate',
     userLocation: state.map.userLocation,
     userLocationLoading: state.map.userLocationLoading,
-    userLocationError: state.map.userLocationError
+    userLocationError: state.map.userLocationError,
+
+    vehicleId: location.query.vehicle,
+    vehicles: getVehicles(state),
+    selectedVehicle: getVehicleById(state, location.query.vehicle)
   };
-})(MapHandler);
+})(MapContainer);

@@ -3,9 +3,12 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 
 import { getUserLocationDefinition } from 'lib/map/locate';
 import {
+  getPathsStyleDefinition,
   getRouteBounds,
   getRouteSource,
-  getPathsStyleDefinition,
+  getVehiclesFeatures,
+  getVehiclesSource,
+  getVehiclesStyleDefinition,
   getStopsStyleDefinition
 } from 'lib/map/route-paths';
 
@@ -22,7 +25,7 @@ const CENTERS = {
   }
 };
 
-const STOPS_MAX_ZOOM = 14;
+const STOPS_MIN_ZOOM = 12;
 
 export default class Map extends Component {
   static propTypes = {
@@ -39,8 +42,14 @@ export default class Map extends Component {
     
     fitToShapes: PropTypes.bool,
     routes: PropTypes.array, // [{ color, paths, stops }]
+    highlightedRoute: PropTypes.string,
 
+    vehicles: PropTypes.array,
+    selectedVehicle: PropTypes.object,
+
+    onRouteClicked: PropTypes.func,
     onStopClicked: PropTypes.func,
+    onVehicleClicked: PropTypes.func,
     onMapMove: PropTypes.func
   };
 
@@ -51,7 +60,12 @@ export default class Map extends Component {
     userLocation: null,
     fitToShapes: false,
     routes: null,
+    highlightedRoute: null,
+    vehicles: null,
+    selectedVehicle: null,
+    onRouteClicked: (routeId) => {},
     onStopClicked: (stopId) => {},
+    onVehicleClicked: (vehicleId) => {},
     onMapMove: (bounds) => {}
   };
 
@@ -83,7 +97,17 @@ export default class Map extends Component {
 
     this._map.on('load', () => {
       if (this.props.routes) {
+        this._map.addSource('vehicles-data', getVehiclesSource([]));
+        this._map.addLayer(getVehiclesStyleDefinition());
         this.renderRoutes(this.props.routes);
+      }
+
+      if (this.props.userLocation) {
+        this.renderUserLocation(this.props.userLocation);
+      }
+
+      if (this.props.selectedVehicle) {
+        this.renderVehicleLocation(this.props.selectedVehicle);
       }
 
       this.setState({ mapLoaded:true });
@@ -94,24 +118,36 @@ export default class Map extends Component {
     });
 
     this._map.on('click', (e) => {
-      if (this.props.routes && this._map.getZoom() > STOPS_MAX_ZOOM) {
-        const features = this._map.queryRenderedFeatures(e.point, { filter:['has', 'stop_id'] });
+      if (this.props.routes && this._map.getZoom() > STOPS_MIN_ZOOM) {
+        const routeFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'route_id'] });
+        const stopFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'stop_id'] });
+        const vehicleFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'vehicle_id'] });
 
-        if (features.length) {
-          this.props.onStopClicked(
-            features[0].properties.direction_id,
-            features[0].properties.stop_id
+        if (vehicleFeatures) {
+          return this.props.onVehicleClicked(vehicleFeatures[0].properties.vehicle_id);
+        }
+
+        if (stopFeatures.length) {
+          return this.props.onStopClicked(
+            stopFeatures[0].properties.direction_id,
+            stopFeatures[0].properties.stop_id
           );
+        }
+
+        if (routeFeatures.length) {
+          return this.props.onRouteClicked(routeFeatures[0].properties.route_path);
         }
       }
     });
     
     this._map.on('mousemove', (e) => {
-      if (this.props.routes && this._map.getZoom() > STOPS_MAX_ZOOM) {
-        const features = this._map.queryRenderedFeatures(e.point, { filter:['has', 'stop_id'] });
+      const routeFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'route_id'] });
+      const stopFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'stop_id'] });
+      const vehicleFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'vehicle_id'] });
 
-        this._map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-      }
+      this._map.getCanvas().style.cursor = routeFeatures.length || stopFeatures.length || vehicleFeatures.length
+        ? 'pointer'
+        : '';
     });
   }
 
@@ -119,45 +155,72 @@ export default class Map extends Component {
     if (this.state.mapLoaded) {
       if (this.props.routes !== nextProps.routes && nextProps.routes) {
         this.renderRoutes(nextProps.routes);
+      } else if (this.props.highlightedRoute !== nextProps.highlightedRoute) {
+        this.setHighlightedRoute(this.props.highlightedRoute, false);
+        this.setHighlightedRoute(nextProps.highlightedRoute, true);
       }
 
       if (!this.props.userLocation && nextProps.userLocation) {
         this.renderUserLocation(nextProps.userLocation);
-        this._map.flyTo(
-          { center:nextProps.userLocation, zoom:16 },
-          { locate:true }
-        );
+      }
+
+      if (this.props.selectedVehicle !== nextProps.selectedVehicle && nextProps.selectedVehicle) {
+        this.renderVehicleLocation(nextProps.selectedVehicle);
       }
     }
   }
 
+  setHighlightedRoute(routeId, isHighlighted = false) {
+    if (routeId) {
+      const route = this.props.routes.find((rt) => {
+        return rt.slug === routeId;
+      });
+
+      if (route) {
+        this.addPathsLayer(route, isHighlighted);
+      }
+    }
+  }
+
+  addPathsLayer(route, isHighlighted = false) {
+    this._map.removeLayer(`route-paths-${route.slug}`);
+
+    this._map.addLayer(
+      getPathsStyleDefinition(route.slug, route.color, isHighlighted)
+    );
+  }
+
   renderRoutes(routes) {
     this.state.renderedRouteIds.forEach((routeId) => {
-      this._map.removeSource(`route-vectors-${routeId}`);
       this._map.removeLayer(`route-paths-${routeId}`);
       this._map.removeLayer(`route-stops-${routeId}`);
+      this._map.removeSource(`route-vectors-${routeId}`);
     });
 
+    this._map.getSource('vehicles-data').setData(getVehiclesFeatures(this.props.vehicles));
+
     routes.forEach((route) => {
+      const isHighlighted = route.slug === this.props.highlightedRoute;
+
       // Add "source" for all route data
-      this._routeSource = this._map.addSource(
-        `route-vectors-${route.id}`,
-        getRouteSource(route.paths, route.stops)
+      this._map.addSource(
+        `route-vectors-${route.slug}`,
+        getRouteSource(route, route.paths, route.stops)
       );
 
       // Add route paths layer
-      this._pathsLayer = this._map.addLayer(
-        getPathsStyleDefinition(route.id, route.color)
+      this._map.addLayer(
+        getPathsStyleDefinition(route.slug, route.color, isHighlighted)
       );
 
       // Add route stops layer
-      this._stopsLayer = this._map.addLayer(
-        getStopsStyleDefinition(route.id, route.color)
+      this._map.addLayer(
+        getStopsStyleDefinition(route.slug, route.color, STOPS_MIN_ZOOM)
       );
     });
 
     this.setState({
-      renderedRouteIds: routes.map(route => route.id)
+      renderedRouteIds: routes.map(route => route.slug)
     });
     
     // Fit map to route paths boundary
@@ -174,6 +237,17 @@ export default class Map extends Component {
     this._locationLayer = this._map.addLayer(
       getUserLocationDefinition(userLocation)
     );
+
+    this._map.flyTo(
+      { center:userLocation, zoom:16 },
+      { locate:true }
+    );
+  }
+
+  renderVehicleLocation() {
+    const { lat, lng } = this.props.selectedVehicle;
+    const vehicleLocation = [lng, lat];
+    this._map.flyTo({ center:vehicleLocation, zoom:16 }, { locate:true });
   }
 
   render() {

@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import agencies from './agencies';
 import map from './map';
 import page from './page';
+import realtime from './realtime';
 import recent_trips from './recent-trips';
 import routes from './routes';
 import route_directions from './route-directions';
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   agencies,
   map,
   page,
+  realtime,
   recent_trips,
   routes,
   route_directions,

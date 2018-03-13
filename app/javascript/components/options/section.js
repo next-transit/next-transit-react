@@ -3,15 +3,17 @@ import classnames from 'classnames';
 
 export default class OptionsSection extends Component {
   static propTypes = {
-    title:        PropTypes.string,
-    show_clear:   PropTypes.bool,
-    inset:        PropTypes.bool
+    inset:        PropTypes.bool,
+    onClearClick: PropTypes.func,
+    showClear:   PropTypes.bool,
+    title:        PropTypes.string
   };
 
   static defaultProps = {
-    title:        null,
-    show_clear:   false,
-    inset:        false
+    inset:        false,
+    onClearClick: () => {},
+    showClear:   false,
+    title:        null
   };
 
   render() {
@@ -23,8 +25,12 @@ export default class OptionsSection extends Component {
       <section className={classes}>
         {this.props.title && 
           <header>
-            {this.props.show_clear && 
-              <button type="button" className="btn btn-small btn-right">Clear</button>
+            {this.props.showClear && 
+              <button
+                type="button"
+                className="btn btn-small btn-right"
+                onClick={(e) => { this.props.onClearClick(); }}
+              >Clear</button>
             }
             <h4>{this.props.title}</h4>
           </header>

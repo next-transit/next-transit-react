@@ -15,13 +15,17 @@ export function getRouteBounds(routePaths) {
   }, { w:180, s:180, e:-180, n:-180 });
 }
 
-function getRoutePathsFeatures(routePaths) {
+function getRoutePathsFeatures(route, routePaths) {
   return routePaths.map((path) => {
     // Reverse position of lat/long in arrays
     return path.map(coord => [coord[1], coord[0]])
   }).map((path) => {
     return {
       type: 'Feature',
+      properties: {
+        route_id: route.slug,
+        route_path: route.path
+      },
       geometry: {
         type: 'LineString',
         coordinates: path
@@ -46,8 +50,32 @@ function getRouteStopsFeatures(routeStops) {
   });
 }
 
-export function getRouteSource(routePaths, routeStops) {
-  const pathFeatures = getRoutePathsFeatures(routePaths);
+export function getVehiclesFeatures(vehicles) {
+  if (vehicles) {
+    const features = vehicles.map((vehicle) => {
+      return {
+        type: 'Feature',
+        properties: {
+          vehicle_id: vehicle.vehicle_id
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [vehicle.lng, vehicle.lat]
+        }
+      };
+    });
+
+    return {
+      type: 'FeatureCollection',
+      features: features
+    };
+  }
+
+  return [];
+}
+
+export function getRouteSource(route, routePaths, routeStops) {
+  const pathFeatures = getRoutePathsFeatures(route, routePaths);
   const stopFeatures = getRouteStopsFeatures(routeStops);
 
   return {
@@ -59,7 +87,17 @@ export function getRouteSource(routePaths, routeStops) {
   };
 }
 
-export function getPathsStyleDefinition(routeId, routeColor) {
+export function getVehiclesSource() {
+  return {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: []
+    }
+  };
+}
+
+export function getPathsStyleDefinition(routeId, routeColor, isHighlighted = false) {
   return {
     id: `route-paths-${routeId}`,
     type: 'line',
@@ -70,14 +108,14 @@ export function getPathsStyleDefinition(routeId, routeColor) {
     },
     paint: {
       'line-color': (routeColor || '#a33'),
-      'line-width': 5,
-      'line-opacity': 0.65
+      'line-width': isHighlighted ? 6 : 5,
+      'line-opacity': isHighlighted ? 0.95 : 0.50
     },
     filter: ['==', '$type', 'LineString']
   };
 }
 
-export function getStopsStyleDefinition(routeId, routeColor) {
+export function getStopsStyleDefinition(routeId, routeColor, minZoom) {
   return {
     id: `route-stops-${routeId}`,
     type: 'circle',
@@ -88,6 +126,19 @@ export function getStopsStyleDefinition(routeId, routeColor) {
       'circle-opacity': 0.65,
       'circle-stroke-width': 3,
       'circle-stroke-color': (routeColor || '#a33')
+    },
+    minzoom: minZoom,
+    filter: ['==', '$type', 'Point']
+  };
+}
+
+export function getVehiclesStyleDefinition() {
+  return {
+    id: 'vehicles',
+    type: 'symbol',
+    source: 'vehicles-data',
+    layout: {
+      'icon-image': 'bus-15'
     },
     filter: ['==', '$type', 'Point']
   };

@@ -127,7 +127,10 @@ export class Application extends Component {
       if (pageRouteId
         && pageDirectionId
         && pageFromStopId
-        && !nextProps.trips
+        && (!nextProps.trips 
+          || this.props.tripsOffset !== nextProps.tripsOffset
+          || (this.props.page.toStopId !== pageToStopId && pageToStopId)
+        )
         && !nextProps.tripsLoading
         && !nextProps.tripsError
       ) {
@@ -135,7 +138,8 @@ export class Application extends Component {
           pageRouteId,
           pageDirectionId,
           pageFromStopId,
-          pageToStopId
+          pageToStopId,
+          nextProps.tripsOffset
         ));
       }
     }
@@ -150,6 +154,13 @@ export class Application extends Component {
   getPageChanges(prevProps, nextProps) {
     const pageParams = ['routeType', 'routeId', 'directionId', 'fromStopId', 'toStopId'];
 
+    let changes = null;
+
+    const showFooter = !nextProps.isHome;
+    if (showFooter !== this.props.showFooter) {
+      changes = { footer:showFooter };
+    }
+
     return pageParams.reduce((changes, paramName) => {
       if (prevProps.params[paramName] !== nextProps.params[paramName]) {
         return {
@@ -159,7 +170,7 @@ export class Application extends Component {
       }
 
       return changes;
-    }, null);
+    }, changes);
   }
 
   getContentDimensions() {
@@ -220,17 +231,19 @@ export class Application extends Component {
   }
 }
 
-export default connect((state, params) => {
-  const isHome = params.location.pathname === '/';
+export default connect((state, { location }) => {
+  const isHome = location.pathname === '/';
+  const tripsOffset = parseInt(location.query.offset, 10) || 0;
 
   return {
     isHome,
+    tripsOffset,
 
     agency: state.agencies.agency,
     is_agency_loading: state.agencies.is_agency_loading,
 
     page: state.page,
-    pageTitle: getPageTitle(state),
+    pageTitle: getPageTitle(state, location),
     backPath: getBackPath(state),
     showFooter: !!state.page.footer,
     settings: state.settings.settings,
@@ -253,7 +266,7 @@ export default connect((state, params) => {
     stopsError: getPageStopsError(state),
 
     trips: state.trips.trips,
-    tripsLoad: state.trips.loading,
+    tripsLoading: state.trips.loading,
     tripsError: state.trips.error
   };
 })(Application);
