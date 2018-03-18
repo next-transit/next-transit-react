@@ -80,9 +80,10 @@ export default class Options extends Component {
       let button = saved 
                     ? this.get_saved_trip_button(trip) 
                     : this.get_recent_trip_button(trip);
+      const keyPrefix = saved ? 'saved' : 'recent';
 
       return (
-        <li key={trip.key}>
+        <li key={`${keyPrefix}-${trip.key}`}>
           <Link to={trip.path} className="options-trip">
             <strong className={`${trip.route_type} ${trip.slug}`}>
               {trip.route_name}
@@ -99,14 +100,19 @@ export default class Options extends Component {
   }
 
   render() {
+    const hasSavedTrips = !!this.props.saved_trips && this.props.saved_trips.length;
+    const hasRecentTrips = !!this.props.recent_trips && this.props.recent_trips.length;
+
     return (
       <div className="options">
         <Section title="Saved Trips">
           <div className="content-inner">
             <nav className="simple-nav">
               <ul>
-                {this.getTrips(this.props.saved_trips, true)}
-                {!this.props.saved_trips.length &&
+                {hasSavedTrips &&
+                  this.getTrips(this.props.saved_trips, true)
+                }
+                {!hasSavedTrips &&
                   <li className="simple-nav-item">No saved trips yet.</li>
                 }
               </ul>
@@ -114,7 +120,7 @@ export default class Options extends Component {
           </div>
         </Section>
 
-        {!!this.props.recent_trips.length &&
+        {hasRecentTrips &&
           <Section
             title="Recent Trips"
             onClearClick={this.props.onClearClick}

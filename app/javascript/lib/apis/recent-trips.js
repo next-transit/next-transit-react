@@ -27,7 +27,7 @@ export function addRecentTrip(recentTrip, callback) {
   const recentTrips = getTrips('recent_trips') || [];
 
   // Remove existing, if present
-  const existingIdx = recentTrips.find(trip => trip.key === recentTrip.key);
+  const existingIdx = recentTrips.findIndex(trip => trip.key === recentTrip.key);
 
   if (existingIdx > -1) {
     recentTrips.splice(existingIdx, 1);
