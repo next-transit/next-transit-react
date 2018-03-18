@@ -1,6 +1,6 @@
 {
   "name": "next-transit-web",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "NEXT-Transit Web",
   "main": "index.js",
   "engines": {
@@ -54,7 +54,7 @@
     "express": "^4.13.4",
     "hbs": "^4.0.0",
     "mapbox-gl": "^0.44.0",
-    "node-sass": "^3.7.0",
+    "node-sass": "^4.7.2",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
