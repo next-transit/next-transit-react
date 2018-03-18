@@ -140,7 +140,6 @@ class MapContainer extends Component {
       width: this.props.width,
       height: this.props.height// + (this.props.offset || 0)
     };
-    console.log('selectedVehicle', this.props.selectedVehicle);
 
     return(
       <div className="map-container" style={containerStyle}>

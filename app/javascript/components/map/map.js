@@ -197,7 +197,11 @@ export default class Map extends Component {
       this._map.removeSource(`route-vectors-${routeId}`);
     });
 
-    this._map.getSource('vehicles-data').setData(getVehiclesFeatures(this.props.vehicles));
+    const vehiclesSource = this._map.getSource('vehicles-data');
+
+    if (vehiclesSource) {
+      vehiclesSource.setData(getVehiclesFeatures(this.props.vehicles));
+    }
 
     routes.forEach((route) => {
       const isHighlighted = route.slug === this.props.highlightedRoute;

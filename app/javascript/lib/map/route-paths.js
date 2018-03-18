@@ -51,27 +51,23 @@ function getRouteStopsFeatures(routeStops) {
 }
 
 export function getVehiclesFeatures(vehicles) {
-  if (vehicles) {
-    const features = vehicles.map((vehicle) => {
-      return {
-        type: 'Feature',
-        properties: {
-          vehicle_id: vehicle.vehicle_id
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [vehicle.lng, vehicle.lat]
-        }
-      };
-    });
-
+  const features = (vehicles || []).map((vehicle) => {
     return {
-      type: 'FeatureCollection',
-      features: features
+      type: 'Feature',
+      properties: {
+        vehicle_id: vehicle.vehicle_id
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [vehicle.lng, vehicle.lat]
+      }
     };
-  }
+  });
 
-  return [];
+  return {
+    type: 'FeatureCollection',
+    features: features
+  };
 }
 
 export function getRouteSource(route, routePaths, routeStops) {
