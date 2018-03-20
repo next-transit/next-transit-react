@@ -24,6 +24,10 @@ class TripsHandler extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearLocations());
+
+    if (this.props.fromStop) {
+      this.addRecentTripInfo(this.props);
+    }
   }
 
   componentWillReceiveProps(nextProps) {

@@ -100,8 +100,8 @@ export default class Options extends Component {
   }
 
   render() {
-    const hasSavedTrips = !!this.props.saved_trips && this.props.saved_trips.length;
-    const hasRecentTrips = !!this.props.recent_trips && this.props.recent_trips.length;
+    const hasSavedTrips = !!this.props.saved_trips && !!this.props.saved_trips.length;
+    const hasRecentTrips = !!this.props.recent_trips && !!this.props.recent_trips.length;
 
     return (
       <div className="options">
