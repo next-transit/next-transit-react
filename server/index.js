@@ -1,13 +1,13 @@
-// require('date-utils');
+const express = require('express');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const hbs = require('hbs');
+const config = require('./config');
 
-var express = require('express'),
-  bodyParser = require('body-parser'),
-  compression = require('compression'),
-  hbs = require('hbs'),
-  port = process.env.PORT || 6001,
-  config = require('./config');
+const port = process.env.PORT || 6001;
+const app = express();
 
-var app = express();
+hbs.registerPartials('./app/templates/partials', function() {});
 
 app.set('view engine', 'hbs');
 app.set('views', './app/templates');
@@ -15,8 +15,6 @@ app.set('views', './app/templates');
 app.use(express.static('./public'));
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended:false }));
-// app.use(express.cookieParser());
-// app.use(express.cookieSession({ secret:'bsl-mfl' }));
 
 app.get('/*', function(req, res) {
   res.render('index', config);

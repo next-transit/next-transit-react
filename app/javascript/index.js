@@ -10,6 +10,12 @@ import appReducer from 'lib/reducers';
 const storeWithMiddleware = applyMiddleware(...[thunkMiddleware])(createStore);
 const store = storeWithMiddleware(appReducer);
 
+browserHistory.listen((location) => {
+  if (location && typeof window.ga === 'function') {
+    window.ga('send', 'pageview', location.pathname);
+  }
+});
+
 ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
