@@ -24,6 +24,7 @@ class TripsHandler extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearLocations());
+    this.requestVehicles(this.props);
 
     if (this.props.fromStop) {
       this.addRecentTripInfo(this.props);
@@ -31,19 +32,32 @@ class TripsHandler extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.trips && nextProps.trips && !this.props.isLocationsLoading) {
-      this.props.dispatch(requestLocations(
-        nextProps.route.route_type_slug,
-        nextProps.route.slug
-      ));
-    }
+    this.requestVehicles(nextProps);
 
     // Store this trip as a "recent trip"
-    if (!nextProps.isSavingRecentTrip
+    if (this.props.route
+      && !nextProps.isSavingRecentTrip
       && nextProps.fromStop
       && (this.props.fromStop !== nextProps.fromStop || this.props.toStop !== nextProps.toStop)
     ) {
       this.addRecentTripInfo(nextProps);
+    }
+  }
+
+  requestVehicles(props) {
+    const { route, trips, vehicles, isLocationsLoading, locationsRequestError } = props;
+
+    if (route
+      && route.has_realtime
+      && trips
+      && !vehicles
+      && !isLocationsLoading
+      && !locationsRequestError
+    ) {
+      props.dispatch(requestLocations(
+        props.route.route_type_slug,
+        props.route.slug
+      ));
     }
   }
 
@@ -127,6 +141,7 @@ export default connect((state, { location }) => {
     tripsOffset,
     all_trips: false,
     isLocationsLoading: state.realtime.isLocationsLoading,
+    locationsRequestError: state.realtime.locationsRequestError,
     vehicles: state.realtime.locations
   };
 })(TripsHandler);
