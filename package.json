@@ -11,7 +11,7 @@
     "test": "npm test",
     "start": "bin/build-sass-start & bin/build-js-start & bin/server-start",
     "stop": "bin/build-sass-stop & bin/build-js-stop & bin/server-stop",
-    "start-prod": "bin/build-sass-prod & bin/build-js & node ./server/index.js"
+    "start-prod": "bin/build-sass-prod & bin/build-js --mode=production & node ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -32,19 +32,21 @@
   },
   "homepage": "https://github.com/next-transit/next-transit-web#readme",
   "dependencies": {
-    "babel-core": "^6.23.1",
-    "babel-loader": "^6.3.2",
-    "babel-plugin-transform-class-properties": "^6.23.0",
-    "babel-plugin-transform-es2015-classes": "^6.23.0",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.44",
+    "@babel/plugin-transform-classes": "^7.0.0-beta.44",
+    "@babel/plugin-transform-object-assign": "^7.0.0-beta.44",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/preset-es2015": "^7.0.0-beta.44",
+    "@babel/preset-es2016": "^7.0.0-beta.44",
+    "@babel/preset-es2017": "^7.0.0-beta.44",
+    "@babel/preset-react": "^7.0.0-beta.44",
+    "@babel/preset-stage-0": "^7.0.0-beta.44",
+    "@babel/runtime": "^7.0.0-beta.44",
+    "babel-loader": "^8.0.0-beta",
     "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.23.0",
-    "babel-preset-stage-0": "^6.22.0",
     "babel-register": "^6.23.0",
-    "babel-runtime": "^6.23.0",
     "body-parser": "^1.15.1",
     "chokidar": "^1.5.2",
     "classnames": "^2.2.5",
@@ -62,7 +64,7 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.4",
-    "webpack": "^1.12.9",
+    "webpack": "^4.5.0",
     "xhr": "^2.2.0"
   }
 }

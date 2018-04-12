@@ -1,64 +1,82 @@
 #!/usr/bin/env node
 
-var program = require('commander');
-var package = require('../package.json');
-var webpack = require('webpack');
-var resolve = require('path').resolve;
-var didFail = false;
+const fs = require('fs');
+const program = require('commander');
+const package = require('../package.json');
+const webpack = require('webpack');
+const resolve = require('path').resolve;
+let didFail = false;
+
+const PATHS = {
+  source: './app/javascript',
+  dest: './public/js'
+};
 
 program
   .version(package.version)
-  .option('-w, --watch', 'watches files and rebuilds on change');
+  .option('-w, --watch', 'watches files and rebuilds on change')
+  .option('-m, --mode [mode]', 'Build mode ("development" or "production"', 'development')
+  .option('-f, --force', 'Force file to rebuild in prod even if it exists');
 
 program.parse(process.argv);
 
-var plugins = [
-  new webpack.optimize.OccurenceOrderPlugin(true)
-];
+if (program.mode === 'production' && !program.force && fs.existsSync(`${PATHS.dest}/app.js`)) {
+  console.error('[build-js] Build skipped because prod app.js file already exists.');
+  process.exit(0);
+  return;
+}
+
+console.log('[build-js]', `Building JS assets (${program.mode})`);
 
 webpack({
   cache: true,
-  entry: './app/javascript/index.js',
+  mode: program.mode,
+  entry: `${PATHS.source}/index.js`,
   output: {
-    path: resolve('./public/js'),
+    path: resolve(PATHS.dest),
     filename: 'app.js'
   },
   devtool: 'source-map',
-  plugins: plugins,
+  plugins: [],
   bail: !program.watch,
-  watch: program.watch,
+  watch: !!program.watch,
   resolve: {
     alias: {
-      components: resolve('./app/javascript/components'),
-      lib: resolve('./app/javascript/lib')
+      components: resolve(`${PATHS.source}/components`),
+      lib: resolve(`${PATHS.source}/lib`)
     },
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
-      loader: 'babel-loader',
-      include: [
-        resolve('./app/javascript')
-      ],
-      query: {
-        cacheDirectory: true
+      exclude: /(node_modules)/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+          presets: ['@babel/preset-env']
+        }
       }
     }]
   }
-}, function(err, stats) {
+}, (err, stats) => {
   if (err) {
     console.error('[build-js] ', err.message);
     process.exit(1);
   } else {
-    if (program.watch) {
-      if (stats.compilation.errors[0]) {
-        didFail = true;
-        console.error('[build-js] ', stats.compilation.errors[0].message);
-      } else if(didFail) {
-        didFail = false;
-        console.log('[build-js] Build fixed');
-      }
+    // console.log(stats);
+
+    if (stats.compilation.warnings.length) {
+      console.error('[build-js] (warning)', stats.compilation.warnings[0].message);
+    }
+
+    if (stats.compilation.errors[0]) {
+      didFail = true;
+      console.error('[build-js]', stats.compilation.errors[0].message);
+    } else if(didFail) {
+      didFail = false;
+      console.log('[build-js] Build fixed');
     }
   }
 

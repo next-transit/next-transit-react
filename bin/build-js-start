@@ -3,7 +3,7 @@
 echo "[build-js-start] Watching JS..." 1>&2;
 
 if [ -f ./tmp/build-js.pid ]; then
-  echo "[build-js-start] Cannot watch JS; it is alraedy running." 1>&2;
+  echo "[build-js-start] Cannot watch JS; it is already running." 1>&2;
   exit 1
 fi
 
