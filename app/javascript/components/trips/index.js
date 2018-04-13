@@ -10,6 +10,7 @@ import { getPageRoute } from 'lib/selectors/routes';
 import { getPageRouteType } from 'lib/selectors/route-types';
 import { getPageFromStop, getPageToStop } from 'lib/selectors/stops';
 
+import Loading from 'components/shared/loading';
 import View from 'components/shared/view';
 import TripsHeader from 'components/shared/trips-header';
 import Trips from './trips';
@@ -98,20 +99,26 @@ class TripsHandler extends Component {
           <div className="trips-subheader-stop trips-subheader-to">Arrives</div>
         </div>
 
-        <div className="content-inner">
-          <Trips
-            tripsOffset={this.props.tripsOffset}
-            showRealtime={this.props.route && this.props.route.has_realtime}
-            vehicles={this.props.vehicles}
-            trips={this.props.trips || []}
-            onRealtimeClick={this.handleRealtimeClick}
+        <Loading isLoading={this.props.isTripsLoading} />
+
+        {!this.props.isTripsLoading &&
+          <div className="content-inner">
+            <Trips
+              tripsOffset={this.props.tripsOffset}
+              showRealtime={this.props.route && this.props.route.has_realtime}
+              vehicles={this.props.vehicles}
+              trips={this.props.trips || []}
+              onRealtimeClick={this.handleRealtimeClick}
+            />
+          </div>
+        }
+
+        {!this.props.isTripsLoading &&
+          <Paging
+            currentPath={this.props.currentPath}
+            currentOffset={this.props.currentOffset}
           />
-        </div>
-        
-        <Paging
-          currentPath={this.props.currentPath}
-          currentOffset={this.props.currentOffset}
-        />
+        }
       </View>
     );
   }
@@ -138,6 +145,7 @@ export default connect((state, { location }) => {
     isSavingRecentTrip: state.recent_trips.isSavingRecentTrip,
     toStop: getPageToStop(state),
     trips: state.trips.trips,
+    isTripsLoading: state.trips.loading,
     tripsOffset,
     all_trips: false,
     isLocationsLoading: state.realtime.isLocationsLoading,
