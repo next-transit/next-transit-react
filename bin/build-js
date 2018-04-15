@@ -20,7 +20,14 @@ program
 
 program.parse(process.argv);
 
-if (program.mode === 'production' && !program.force && fs.existsSync(`${PATHS.dest}/app.js`)) {
+let fileName = 'app.js';
+
+if (program.mode === 'production') {
+  const versionSlug = package.version.replace(/\./g, '-');
+  fileName = `app-${versionSlug}.js`;
+}
+
+if (program.mode === 'production' && !program.force && fs.existsSync(`${PATHS.dest}/${fileName}`)) {
   console.error('[build-js] Build skipped because prod app.js file already exists.');
   process.exit(0);
   return;
@@ -34,7 +41,7 @@ webpack({
   entry: `${PATHS.source}/index.js`,
   output: {
     path: resolve(PATHS.dest),
-    filename: 'app.js'
+    filename: fileName
   },
   devtool: 'source-map',
   plugins: [],
