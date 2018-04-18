@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { getPageRouteDirections } from 'lib/selectors/directions';
 
+import Loading from 'components/shared/loading';
 import View from 'components/shared/view';
 import SimpleNav from 'components/shared/simple-nav';
 
@@ -25,6 +26,12 @@ class RouteHandler extends Component {
 
   render() {
     const { routeType, routeId } = this.props.page;
+
+    if (!this.props.directions) {
+      return (
+        <Loading isLoading>Loading route directions ...</Loading>
+      );
+    }
 
     return (
       <View name="directions" innerContent={false}>

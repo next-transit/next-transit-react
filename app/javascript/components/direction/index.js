@@ -6,6 +6,7 @@ import { getPageRouteDirection } from 'lib/selectors/directions';
 import { getBackPath } from 'lib/selectors/page';
 import { getPageStops, getPageFromStop } from 'lib/selectors/stops';
 
+import Loading from 'components/shared/loading';
 import View from 'components/shared/view';
 import SimpleNav from 'components/shared/simple-nav';
 import TripsHeader from 'components/shared/trips-header';
@@ -31,6 +32,12 @@ class DirectionHandler extends Component {
   }
 
   render() {
+    if (!this.props.stops) {
+      return (
+        <Loading isLoading>Loading stops...</Loading>
+      );
+    }
+
     return (
       <View name="stops" innerContent={false}>
         <TripsHeader

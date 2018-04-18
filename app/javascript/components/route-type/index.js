@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { getPageRouteType } from 'lib/selectors/route-types';
 import { getPageRoutes } from 'lib/selectors/routes';
 
+import Loading from 'components/shared/loading';
 import View from 'components/shared/view';
 
 class RouteTypeHandler extends Component {
@@ -24,6 +25,12 @@ class RouteTypeHandler extends Component {
   }
 
   render() {
+    if (!this.props.routes) {
+      return (
+        <Loading isLoading>Loading routes ...</Loading>
+      );
+    }
+
     return (
       <View name="routes" nav_items={this.getRouteItems()} />
     );

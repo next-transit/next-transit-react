@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { browserHistory, Link } from 'react-router';
 
+import Loading from 'components/shared/loading';
 import SearchForm from 'components/shared/search-form';
 
 export default class Home extends Component {
@@ -13,7 +14,7 @@ export default class Home extends Component {
   static defaultProps = {
     search_text: 'Search...',
     twitter_acct: '',
-    route_types: []
+    route_types: null
   };
 
   constructor(...args) {
@@ -46,6 +47,8 @@ export default class Home extends Component {
   }
 
   render() {
+    const hasRouteTypes = !!this.props.route_types;
+
     return (
       <div className="home">
         <div className="row">
@@ -61,21 +64,27 @@ export default class Home extends Component {
           </div>
         </div>
 
-        <div className="content-inner content-section">
-          <nav className="simple-nav">
-            <ul>
-              {this.getRouteTypes()}
-            </ul>
-          </nav>
-        </div>
+        <Loading isLoading={!hasRouteTypes} />
 
-        <div className="content-inner content-section">
-          <nav className="simple-nav small">
-            <Link to="/locate">
-              <i className="icon-compass"></i> Find nearby routes
-            </Link>
-          </nav>
-        </div>
+        {hasRouteTypes &&
+          <div className="content-inner content-section">
+            <nav className="simple-nav">
+              <ul>
+                {this.getRouteTypes()}
+              </ul>
+            </nav>
+          </div>
+        }
+
+        {hasRouteTypes &&
+          <div className="content-inner content-section">
+            <nav className="simple-nav small">
+              <Link to="/locate">
+                <i className="icon-compass"></i> Find nearby routes
+              </Link>
+            </nav>
+          </div>
+        }
 
         <div className="content-text content-subtle">
           {this.props.twitter_acct && 

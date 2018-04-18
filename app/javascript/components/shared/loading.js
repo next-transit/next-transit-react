@@ -2,12 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 export default class Loading extends Component {
   static propTypes = {
-    content: PropTypes.node,
     isLoading: PropTypes.bool.isRequired
-  };
-
-  static defaultProps = {
-    content: null
   };
 
   timeout = null;
@@ -29,6 +24,13 @@ export default class Loading extends Component {
       } else {
         this.hideLoading();
       }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) {
+      window.clearTimeout(this.timeout);
+      this.timeout = null;
     }
   }
 
@@ -56,7 +58,7 @@ export default class Loading extends Component {
 
     return (
       <div className="content-inner">
-        {this.props.content || 'Loading...'}
+        {this.props.children || 'Loading...'}
       </div>
     );
   }
