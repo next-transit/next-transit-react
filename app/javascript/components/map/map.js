@@ -123,18 +123,18 @@ export default class Map extends Component {
         const stopFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'stop_id'] });
         const vehicleFeatures = this._map.queryRenderedFeatures(e.point, { filter:['has', 'vehicle_id'] });
 
-        if (vehicleFeatures) {
+        if (vehicleFeatures && vehicleFeatures.length) {
           return this.props.onVehicleClicked(vehicleFeatures[0].properties.vehicle_id);
         }
 
-        if (stopFeatures.length) {
+        if (stopFeatures && stopFeatures.length) {
           return this.props.onStopClicked(
             stopFeatures[0].properties.direction_id,
             stopFeatures[0].properties.stop_id
           );
         }
 
-        if (routeFeatures.length) {
+        if (routeFeatures && routeFeatures.length) {
           return this.props.onRouteClicked(routeFeatures[0].properties.route_path);
         }
       }

@@ -1,6 +1,6 @@
 {
   "name": "next-transit-web",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "NEXT-Transit Web",
   "main": "index.js",
   "engines": {
