@@ -6,8 +6,8 @@ export function getLocation (callback) {
       } else {
         callback(new Error('Could not get position.'));
       }
-    });
+    }, callback);
   } else {
-    callback(new Error('Location API not available'));
+    callback(new Error('Location API not available.'));
   }
 };

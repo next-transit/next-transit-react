@@ -13,6 +13,7 @@ import {
 } from 'lib/actions/shapes';
 import { getPageRoute } from 'lib/selectors/routes';
 
+import LocationModal from './location-modal';
 import Map from './map';
 import MapRoutesList from './routes-list';
 
@@ -143,13 +144,11 @@ class MapContainer extends Component {
 
     return(
       <div className="map-container" style={containerStyle}>
-        {this.props.userLocationLoading &&
-          <div className="map-loading-overlay">
-            <div className="map-loading">
-              Getting location...
-            </div>
-          </div>
-        }
+        <LocationModal
+          isLoading={this.props.userLocationLoading}
+          error={this.props.userLocationError}
+          onRetry={this.handleRetry}
+        />
 
         {this.props.height && this.props.width &&
           <Map
